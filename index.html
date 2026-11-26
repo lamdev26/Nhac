@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#101322">
-<title>LUMI MASTER STUDIO · Pro Browser Mastering</title>
+<title>LUMI MASTER STUDIO · Pro 1-File Mastering</title>
 <style>
 :root{
   color-scheme:dark;
@@ -61,19 +61,19 @@ header{
 main{max-width:1220px;margin:20px auto;padding:0 18px 60px}
 .hero{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin:12px 0 18px;flex-wrap:wrap}
 .hero h2{font-size:clamp(24px,3.6vw,34px);line-height:1.15;margin:0 0 6px}
-.hero p{margin:0;color:var(--muted);max-width:720px}
+.hero p{margin:0;color:var(--muted);max-width:740px}
 .notice{
   padding:11px 14px;border-radius:12px;
   background:#1a1c34;border:1px solid #3c4069;
   color:#d9dcff;font-size:12.5px;margin-bottom:16px;
 }
-.grid{display:grid;grid-template-columns:1.08fr .92fr;gap:16px}
+.grid{display:grid;grid-template-columns:1.06fr .94fr;gap:16px}
 .panel{
   background:linear-gradient(180deg,#161c2e,#101524);
   border:1px solid var(--line);border-radius:18px;padding:18px;
   box-shadow:0 12px 35px #0003;
 }
-.panel h3{margin:0 0 12px;font-size:15.5px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.panel h3{margin:0 0 12px;font-size:15.5px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
 .muted{color:var(--muted)}
 .drop{
   position:relative;display:block;border:1.5px dashed #556288;border-radius:14px;
@@ -110,8 +110,20 @@ input,select,button{font:inherit}
 .transport{
   background:#0d1322;border:1px solid #26314d;border-radius:14px;padding:12px;margin-top:12px;
 }
+.view-tabs{display:flex;gap:6px;margin-bottom:8px;justify-content:space-between;align-items:center;flex-wrap:wrap}
+.tab-group{display:flex;gap:6px}
+.tab-btn{
+  background:#151d32;border:1px solid #2c3858;color:var(--muted);
+  border-radius:7px;padding:4px 10px;font-size:11.5px;cursor:pointer;
+}
+.tab-btn.active{border-color:var(--cyan);color:var(--cyan);background:#122539;font-weight:600}
+.toggle-chip{
+  display:inline-flex;align-items:center;gap:6px;font-size:11.5px;color:var(--muted);
+  cursor:pointer;user-select:none;
+}
+.toggle-chip input{accent-color:var(--cyan);margin:0}
 canvas.wave{
-  width:100%;height:78px;display:block;border-radius:8px;
+  width:100%;height:88px;display:block;border-radius:8px;
   background:#090d18;cursor:pointer;margin-bottom:10px;
 }
 .transport-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:space-between}
@@ -131,22 +143,33 @@ canvas.wave{
   width:100%;background:#0c1220;color:var(--txt);
   border:1px solid #323e5c;border-radius:9px;padding:8.5px 10px;
 }
-.presets{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.presets{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-bottom:12px}
 .preset-btn{
   background:#141b2f;border:1px solid #2e3b5c;color:var(--muted);
-  border-radius:8px;padding:6px 10px;font-size:12px;cursor:pointer;
+  border-radius:9px;padding:7px 10px;font-size:12px;cursor:pointer;text-align:left;
+  transition:border-color .15s,background .15s,color .15s;
 }
-.preset-btn.active{border-color:var(--cyan);color:var(--cyan);background:#132539;font-weight:600}
-.control{padding:9px 0;border-bottom:1px solid #242d44}
+.preset-btn small{display:block;font-size:10.5px;opacity:.78;margin-top:1px}
+.preset-btn.active{border-color:var(--cyan);color:var(--txt);background:#132539}
+.preset-btn.active b{color:var(--cyan)}
+.control{padding:8px 0;border-bottom:1px solid #242d44}
 .control:last-child{border:0}
 .controltop{display:flex;justify-content:space-between;gap:12px;align-items:center}
-.control label{font-weight:600;font-size:13.5px}
-.value{color:var(--cyan);font-variant-numeric:tabular-nums;font-size:13px;font-weight:600}
-input[type=range]{width:100%;accent-color:var(--accent);margin:7px 0 0}
+.control label{font-weight:600;font-size:13px}
+.value{color:var(--cyan);font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:600}
+input[type=range]{width:100%;accent-color:var(--accent);margin:6px 0 0}
+.switch-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:9px 11px;border-radius:10px;background:#0e1424;border:1px solid #26314c;
+  margin:8px 0;
+}
+.switch-row span{font-size:13px;font-weight:600}
+.switch-row small{display:block;font-size:11px;color:var(--muted)}
+.switch-row input[type=checkbox]{width:18px;height:18px;accent-color:var(--cyan);cursor:pointer}
 .eqgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:8px}
-.eq{background:#0e1424;border:1px solid #26314c;border-radius:12px;padding:10px 4px;text-align:center}
+.eq{background:#0e1424;border:1px solid #26314c;border-radius:12px;padding:9px 4px;text-align:center}
 .eq label{font-size:11px;color:var(--muted);display:block;line-height:1.25}
-.eq input{writing-mode:vertical-lr;direction:rtl;height:96px;width:22px;accent-color:var(--cyan);display:block;margin:8px auto}
+.eq input{writing-mode:vertical-lr;direction:rtl;height:90px;width:22px;accent-color:var(--cyan);display:block;margin:7px auto}
 .eq b{font-size:11.5px;font-variant-numeric:tabular-nums}
 .status{
   padding:11px 13px;border-radius:12px;background:#0e1424;
@@ -166,10 +189,10 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:7px 0 0}
 }
 @media(max-width:540px){
   header{position:static}
-  .fields,.exportgrid{grid-template-columns:1fr}
+  .fields,.exportgrid,.presets{grid-template-columns:1fr}
   .panel{padding:14px}
   .eqgrid{gap:4px}
-  .eq input{height:82px}
+  .eq input{height:80px}
 }
 </style>
 </head>
@@ -179,25 +202,25 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:7px 0 0}
     <div class="logo">LM</div>
     <div>
       <h1>LUMI MASTER STUDIO</h1>
-      <p>REAL-TIME BROWSER AUDIO MASTERING · MP3 / WAV</p>
+      <p>PRO 1-FILE BROWSER MASTERING · MP3 / WAV</p>
     </div>
   </div>
   <div class="header-pills">
-    <span class="pill live" id="engineBadge">REAL-TIME DSP</span>
-    <span class="pill">100% CỤC BỘ TRÊN THIẾT BỊ</span>
+    <span class="pill live">SOFT CLIP + MONO BASS</span>
+    <span class="pill">MẶC ĐỊNH THEO FILE GỐC</span>
   </div>
 </header>
 
 <main>
   <section class="hero">
     <div>
-      <h2>Master âm thanh<br><span style="color:#a9a0ff">nghe trực tiếp &amp; xuất chuẩn sạch.</span></h2>
-      <p>Nghe thử thời gian thực, so sánh A/B tức thì giữa bản gốc và bản master, cắt sub-rumble, EQ 5 dải, compressor, limiter và xuất MP3 320 kbps hoặc WAV 24-bit kèm metadata chuẩn.</p>
+      <h2>Master âm thanh chuẩn sạch<br><span style="color:#a9a0ff">gọn trong 1 file duy nhất.</span></h2>
+      <p>Khởi đầu trung tính theo đúng file gốc, chọn nhanh 5 kiểu master đề xuất, nghe so sánh A/B cân bằng âm lượng, cắt Mono Bass &lt; 120 Hz, Soft Clipper và xuất MP3 320 kbps hoặc WAV 24-bit.</p>
     </div>
   </section>
 
   <div class="notice">
-    Lưu ý nguồn gốc: ứng dụng có thể quét dấu hiệu metadata/C2PA hiện diện trong file, nhưng không thể xác minh chữ ký C2PA ngoại tuyến hay biến file AI thành file không có nguồn gốc AI. Chứng thực nguồn gốc không bị cố ý giả mạo.
+    Lưu ý nguồn gốc: ứng dụng chỉ quét chuỗi metadata/C2PA sơ bộ, không thể xác minh chữ ký C2PA ngoại tuyến hay biến file AI thành không phải AI. Chứng thực nguồn gốc không bị giả mạo.
   </div>
 
   <div class="grid">
@@ -206,7 +229,7 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:7px 0 0}
       <h3>01 · Nạp file &amp; Trình phát A/B</h3>
       <div class="drop" id="drop">
         <strong>Kéo thả hoặc chạm để chọn file nhạc</strong>
-        <small>Hỗ trợ MP3, WAV, M4A, AAC · xử lý hoàn toàn trong RAM</small>
+        <small>Hỗ trợ MP3, WAV, M4A, AAC · giữ nguyên Sample Rate &amp; kênh gốc</small>
         <input id="file" type="file" accept="audio/*,.mp3,.wav,.m4a,.aac,.flac,.ogg">
       </div>
       <div class="status" id="loadStatus" style="margin-top:10px;display:none"></div>
@@ -220,7 +243,17 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:7px 0 0}
       </div>
 
       <div class="transport">
-        <canvas class="wave" id="waveCanvas" width="600" height="78"></canvas>
+        <div class="view-tabs">
+          <div class="tab-group">
+            <button class="tab-btn active" id="tabWave" data-view="wave">Waveform</button>
+            <button class="tab-btn" id="tabSpec" data-view="spec">Phổ tần (Spectrum)</button>
+          </div>
+          <label class="toggle-chip" title="Tự bù âm lượng bản Gốc ngang bản Master khi bấm A/B">
+            <input type="checkbox" id="abMatch" checked>
+            <span>A/B cân bằng âm lượng</span>
+          </label>
+        </div>
+        <canvas class="wave" id="waveCanvas" width="600" height="88"></canvas>
         <div class="transport-row">
           <div class="actions" style="margin:0">
             <button class="btn" id="playBtn" disabled>Phát</button>
@@ -233,7 +266,7 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:7px 0 0}
         <div class="meter-grid">
           <div class="kpi"><span>Đỉnh thực (Peak)</span><b id="kpiPeak">-- dBFS</b></div>
           <div class="kpi"><span>Âm lượng (RMS)</span><b id="kpiRms">-- dBFS</b></div>
-          <div class="kpi"><span>Ước lượng LUFS</span><b id="kpiLufs">-- LUFS</b></div>
+          <div class="kpi"><span>K-Weighted LUFS</span><b id="kpiLufs">-- LUFS</b></div>
           <div class="kpi"><span>Trạng thái Clip</span><b id="kpiClip">An toàn</b></div>
         </div>
         <div class="meter-wrap">
@@ -250,24 +283,51 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:7px 0 0}
           <div class="field"><label>Album</label><input id="album" placeholder="Tên album"></div>
           <div class="field"><label>Comment</label><input id="comment" placeholder="Ghi chú (tùy chọn)"></div>
         </div>
-        <p class="muted" style="font-size:11.5px;margin:8px 0 0">Metadata được ghi chuẩn ID3v2.3 (MP3) và RIFF LIST/INFO (WAV) theo thông tin bạn nhập.</p>
+        <p class="muted" style="font-size:11.5px;margin:8px 0 0">Ghi chuẩn ID3v2.3 (MP3) và RIFF LIST/INFO (WAV) theo thông tin bạn nhập.</p>
       </div>
     </div>
 
     <!-- RIGHT COLUMN -->
     <div class="panel">
-      <h3>03 · Preset &amp; Bộ xử lý Master</h3>
+      <h3>03 · Mặc định gốc &amp; 5 kiểu đề xuất</h3>
       <div class="presets" id="presets">
-        <button class="preset-btn active" data-preset="flat">Mặc định (Flat)</button>
-        <button class="preset-btn" data-preset="edm">EDM / Vinahouse</button>
-        <button class="preset-btn" data-preset="vocal">Vocal / Ballad</button>
-        <button class="preset-btn" data-preset="streaming">Streaming -14 LUFS</button>
-        <button class="preset-btn" data-preset="lofi">Lo-Fi / Chill</button>
+        <button class="preset-btn active" data-preset="original">
+          <b>Mặc định (Theo file gốc)</b>
+          <small>Trung tính 100% · giữ nguyên âm sắc gốc</small>
+        </button>
+        <button class="preset-btn" data-preset="edm">
+          <b>1. EDM / Vinahouse Club</b>
+          <small>Kick/Sub chắc · sáng · Soft Clip 35%</small>
+        </button>
+        <button class="preset-btn" data-preset="vocal">
+          <b>2. Vocal / Ballad Ấm</b>
+          <small>Nổi giọng hát · êm tai · dải cao mượt</small>
+        </button>
+        <button class="preset-btn" data-preset="streaming">
+          <b>3. Streaming (-14 LUFS)</b>
+          <small>Cân bằng Spotify / YouTube / Apple Music</small>
+        </button>
+        <button class="preset-btn" data-preset="tiktok">
+          <b>4. TikTok / Loa Điện Thoại</b>
+          <small>Cắt sub thừa · đẩy Mid rõ nét, to sạch</small>
+        </button>
+        <button class="preset-btn" data-preset="lofi">
+          <b>5. Lo-Fi / Chill Mượt</b>
+          <small>Ấm áp · giảm chói gắt · giữ không gian</small>
+        </button>
+      </div>
+
+      <div class="switch-row">
+        <div>
+          <span>Mono Bass (&lt; 120 Hz)</span>
+          <small>Khóa dải siêu trầm về Mono giúp kick/sub đánh chắc, tránh triệt pha</small>
+        </div>
+        <input type="checkbox" id="monoBass">
       </div>
 
       <div class="control">
-        <div class="controltop"><label>Sub-cut High-pass</label><span class="value" id="hpfv">30 Hz</span></div>
-        <input id="hpf" type="range" min="20" max="100" value="30" step="2">
+        <div class="controltop"><label>Sub-cut High-pass</label><span class="value" id="hpfv">20 Hz</span></div>
+        <input id="hpf" type="range" min="20" max="100" value="20" step="2">
       </div>
       <div class="control">
         <div class="controltop"><label>Output gain</label><span class="value" id="gainv">0 dB</span></div>
@@ -278,32 +338,33 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:7px 0 0}
         <input id="bass" type="range" min="-6" max="9" value="0" step="0.1">
       </div>
       <div class="control">
-        <div class="controltop"><label>Compressor threshold</label><span class="value" id="threshv">-18 dB</span></div>
-        <input id="thresh" type="range" min="-36" max="0" value="-18" step="1">
+        <div class="controltop"><label>Compressor threshold</label><span class="value" id="threshv">0 dB</span></div>
+        <input id="thresh" type="range" min="-36" max="0" value="0" step="1">
       </div>
       <div class="control">
-        <div class="controltop"><label>Compressor ratio</label><span class="value" id="ratiov">3:1</span></div>
-        <input id="ratio" type="range" min="1" max="12" value="3" step="0.5">
+        <div class="controltop"><label>Compressor ratio</label><span class="value" id="ratiov">1:1</span></div>
+        <input id="ratio" type="range" min="1" max="12" value="1" step="0.5">
       </div>
       <div class="control">
-        <div class="controltop"><label>Limiter ceiling</label><span class="value" id="limitv">-1 dB</span></div>
-        <input id="limit" type="range" min="-6" max="-0.1" value="-1" step="0.1">
+        <div class="controltop"><label>Soft Clipper Drive</label><span class="value" id="clipv">0%</span></div>
+        <input id="clip" type="range" min="0" max="60" value="0" step="1">
+      </div>
+      <div class="control">
+        <div class="controltop"><label>Limiter ceiling</label><span class="value" id="limitv">-0.3 dB</span></div>
+        <input id="limit" type="range" min="-6" max="-0.1" value="-0.3" step="0.1">
       </div>
       <div class="control">
         <div class="controltop"><label>Stereo width (M/S)</label><span class="value" id="widthv">100%</span></div>
         <input id="width" type="range" min="0" max="150" value="100" step="1">
       </div>
 
-      <h3 style="margin-top:14px">EQ 5 dải</h3>
+      <h3 style="margin-top:12px">EQ 5 dải</h3>
       <div class="eqgrid" id="eqgrid"></div>
 
       <div class="actions" style="margin-top:14px">
         <button class="btn" id="render" disabled>Render &amp; Đo chuẩn xuất</button>
         <button class="btn secondary" id="autoGain" disabled>Auto-Gain tối ưu</button>
-        <button class="btn secondary" id="reset">Đặt lại</button>
-      </div>
-      <div class="muted" style="font-size:11.5px;margin-top:8px">
-        Kéo thanh trượt sẽ tác động trực tiếp khi đang phát. Nhấn “Render &amp; Đo chuẩn xuất” để tạo file chất lượng cao và kiểm tra đỉnh/LUFS.
+        <button class="btn secondary" id="reset">Về mặc định gốc</button>
       </div>
     </div>
   </div>
@@ -312,9 +373,6 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:7px 0 0}
     <h3>04 · Nguồn gốc &amp; kiểm tra dấu vết</h3>
     <div class="status" id="provenance">Chọn file để quét dấu hiệu metadata và Content Credentials.</div>
     <div class="actions"><button class="btn secondary" id="scan" disabled>Quét lại dấu hiệu</button></div>
-    <p class="muted" style="font-size:11.5px;margin:8px 0 0">
-      Tìm thấy chuỗi “Suno”, “C2PA” hay “Content Credentials” chỉ là dấu hiệu sơ bộ. Muốn xác minh cần công cụ đọc manifest/chữ ký C2PA chuyên dụng. Không thấy dấu hiệu cũng không chứng minh file không phải AI.
-    </p>
   </div>
 
   <div class="panel" style="margin-top:16px">
@@ -322,19 +380,19 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:7px 0 0}
     <div class="exportgrid">
       <div class="exportbox">
         <h4>MP3 · 320 kbps</h4>
-        <p>Mã hóa MP3 CBR 320 kbps, ghi thẻ ID3v2.3 (Title, Artist, Album, Comment UTF-8).</p>
+        <p>Mã hóa MP3 CBR 320 kbps, giữ Sample Rate gốc (nếu tương thích MP3), thẻ ID3v2.3.</p>
         <div class="actions"><button class="btn" id="mp3" disabled>Xuất MP3 320</button></div>
       </div>
       <div class="exportbox">
         <h4>WAV · PCM 24-bit</h4>
-        <p>Không nén 24-bit PCM, kèm chunk RIFF LIST/INFO metadata cơ bản.</p>
+        <p>Không nén 24-bit PCM, giữ nguyên Sample Rate &amp; kênh gốc, kèm RIFF LIST/INFO.</p>
         <div class="actions"><button class="btn" id="wav" disabled>Xuất WAV 24-bit</button></div>
       </div>
     </div>
-    <div class="status" id="exportstatus" style="margin-top:12px">Chưa có bản render. Hãy nạp file, chỉnh thông số và nhấn “Render &amp; Đo chuẩn xuất”.</div>
+    <div class="status" id="exportstatus" style="margin-top:12px">Mặc định đang giữ nguyên theo file gốc. Hãy chọn 1 trong 5 kiểu đề xuất (hoặc tự chỉnh) rồi nhấn “Render &amp; Đo chuẩn xuất”.</div>
   </div>
 
-  <div class="footer">LUMI MASTER STUDIO · Xử lý âm thanh Web Audio API cục bộ · Cần Internet lần đầu để tải thư viện mã hóa MP3 (lamejs).</div>
+  <div class="footer">LUMI MASTER STUDIO · Phiên bản 1 file tối ưu xuất · Web Audio API cục bộ.</div>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/lamejs@1.2.1/lame.min.js"></script>
@@ -342,12 +400,11 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:7px 0 0}
 (() => {
   const $ = id => document.getElementById(id);
 
-  // State
   let sourceFile = null;
   let sourceBuffer = null;
   let masteredBuffer = null;
+  let sourceRmsDb = -18;
 
-  // Live playback state
   let audioCtx = null;
   let liveSource = null;
   let liveNodes = null;
@@ -356,30 +413,38 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:7px 0 0}
   let playOffset = 0;
   let playStartTime = 0;
   let rafId = null;
+  let viewMode = 'wave';
 
   const eqDefs = [['Low', 80], ['Low-mid', 250], ['Mid', 1000], ['High-mid', 4000], ['High', 12000]];
   const eqValues = [0, 0, 0, 0, 0];
 
+  // Mặc định theo file gốc + 5 kiểu đề xuất
   const PRESETS = {
-    flat:      { hpf: 30, gain: 0,   bass: 0,   thresh: -18, ratio: 3,   limit: -1.0, width: 100, eq: [0, 0, 0, 0, 0] },
-    edm:       { hpf: 32, gain: 2.2, bass: 3.0, thresh: -14, ratio: 4.5, limit: -0.8, width: 112, eq: [1.5, -1.5, 0.5, 2.0, 2.5] },
-    vocal:     { hpf: 40, gain: 1.5, bass: 1.0, thresh: -20, ratio: 2.5, limit: -1.0, width: 102, eq: [-1.0, 0.5, 2.0, 1.5, 1.0] },
-    streaming: { hpf: 30, gain: 1.2, bass: 1.0, thresh: -18, ratio: 3.0, limit: -1.0, width: 105, eq: [0.5, -0.5, 0.5, 1.0, 1.0] },
-    lofi:      { hpf: 36, gain: 0.5, bass: 2.5, thresh: -22, ratio: 2.5, limit: -1.5, width: 90,  eq: [2.0, 1.0, -0.5, -2.0, -4.0] }
+    original:  { monoBass: false, hpf: 20, gain: 0,   bass: 0,   thresh: 0,   ratio: 1,   clip: 0,  limit: -0.3, width: 100, eq: [0, 0, 0, 0, 0] },
+    edm:       { monoBass: true,  hpf: 30, gain: 2.5, bass: 2.5, thresh: -14, ratio: 4.0, clip: 35, limit: -0.6, width: 112, eq: [1.5, -1.5, 0.5, 2.0, 2.5] },
+    vocal:     { monoBass: true,  hpf: 40, gain: 1.5, bass: 1.0, thresh: -20, ratio: 2.5, clip: 15, limit: -1.0, width: 104, eq: [-1.0, 0.5, 2.0, 1.5, 1.0] },
+    streaming: { monoBass: true,  hpf: 28, gain: 1.0, bass: 0.5, thresh: -18, ratio: 2.5, clip: 15, limit: -1.0, width: 105, eq: [0.5, -0.5, 0.5, 1.0, 1.0] },
+    tiktok:    { monoBass: true,  hpf: 46, gain: 2.8, bass: 1.5, thresh: -15, ratio: 4.0, clip: 40, limit: -0.8, width: 100, eq: [-0.5, 1.0, 2.5, 2.0, 1.5] },
+    lofi:      { monoBass: false, hpf: 32, gain: 0.5, bass: 2.0, thresh: -22, ratio: 2.5, clip: 25, limit: -1.2, width: 92,  eq: [2.0, 1.0, -0.5, -2.0, -4.0] }
   };
 
-  // Build EQ sliders
   $('eqgrid').innerHTML = eqDefs.map((e, i) =>
     `<div class="eq"><label>${e[0]}<br>${e[1]} Hz</label><input aria-label="${e[0]}" type="range" min="-9" max="9" step="0.5" value="0" data-eq="${i}"><b id="eqv${i}">0 dB</b></div>`
   ).join('');
 
-  const controls = ['hpf', 'gain', 'bass', 'thresh', 'ratio', 'limit', 'width'];
-  const suffix = { hpf: ' Hz', gain: ' dB', bass: ' dB', thresh: ' dB', ratio: ':1', limit: ' dB', width: '%' };
+  const controls = ['hpf', 'gain', 'bass', 'thresh', 'ratio', 'clip', 'limit', 'width'];
+  const suffix = { hpf: ' Hz', gain: ' dB', bass: ' dB', thresh: ' dB', ratio: ':1', clip: '%', limit: ' dB', width: '%' };
 
   function setStatus(elId, text, tone = '') {
     const el = $(elId);
     el.className = 'status' + (tone ? ' ' + tone : '');
     el.textContent = text;
+  }
+
+  function showLoadStatus(text, tone = '') {
+    const el = $('loadStatus');
+    el.style.display = 'block';
+    setStatus('loadStatus', text, tone);
   }
 
   function fmtTime(s) {
@@ -392,13 +457,17 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:7px 0 0}
     $('mp3').disabled = true;
     $('wav').disabled = true;
     if (sourceBuffer) {
-      setStatus('exportstatus', 'Thông số đã thay đổi. Hãy nhấn “Render & Đo chuẩn xuất” để tạo bản xuất mới.');
+      setStatus('exportstatus', 'Thông số đã thay đổi. Nhấn “Render & Đo chuẩn xuất” để tạo bản xuất mới.');
     }
   }
 
   function syncLabels() {
     controls.forEach(id => $(id + 'v').textContent = $(id).value + suffix[id]);
     eqValues.forEach((v, i) => $('eqv' + i).textContent = v + ' dB');
+  }
+
+  function clearActivePreset() {
+    document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
   }
 
   controls.forEach(id => $(id).addEventListener('input', () => {
@@ -408,6 +477,14 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:7px 0 0}
     clearActivePreset();
   }));
 
+  $('monoBass').addEventListener('change', () => {
+    applyLiveParams();
+    invalidateRender();
+    clearActivePreset();
+  });
+
+  $('abMatch').addEventListener('change', () => applyLiveParams());
+
   document.querySelectorAll('[data-eq]').forEach(el => el.addEventListener('input', () => {
     eqValues[+el.dataset.eq] = +el.value;
     syncLabels();
@@ -416,18 +493,16 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:7px 0 0}
     clearActivePreset();
   }));
 
-  function clearActivePreset() {
-    document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
-  }
-
   function applyPreset(name) {
     const p = PRESETS[name];
     if (!p) return;
+    $('monoBass').checked = !!p.monoBass;
     $('hpf').value = p.hpf;
     $('gain').value = p.gain;
     $('bass').value = p.bass;
     $('thresh').value = p.thresh;
     $('ratio').value = p.ratio;
+    $('clip').value = p.clip;
     $('limit').value = p.limit;
     $('width').value = p.width;
     document.querySelectorAll('[data-eq]').forEach((el, i) => {
@@ -446,11 +521,28 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:7px 0 0}
     btn.addEventListener('click', () => applyPreset(btn.dataset.preset));
   });
 
-  $('reset').addEventListener('click', () => applyPreset('flat'));
+  $('reset').addEventListener('click', () => applyPreset('original'));
 
-  // Build reusable DSP chain on any BaseAudioContext (AudioContext or OfflineAudioContext)
+  // Soft Clipper curve (tanh)
+  function makeClipCurve(drivePct) {
+    const samples = 2048;
+    const curve = new Float32Array(samples);
+    if (drivePct <= 0) {
+      for (let i = 0; i < samples; i++) curve[i] = (i * 2) / (samples - 1) - 1;
+      return curve;
+    }
+    const k = 1 + (drivePct / 100) * 4.5;
+    const norm = Math.tanh(k);
+    for (let i = 0; i < samples; i++) {
+      const x = (i * 2) / (samples - 1) - 1;
+      curve[i] = Math.tanh(k * x) / norm;
+    }
+    return curve;
+  }
+
   function buildDspChain(ctx, channels) {
     const input = ctx.createGain();
+
     const hpf = ctx.createBiquadFilter();
     hpf.type = 'highpass';
     hpf.frequency.value = +$('hpf').value;
@@ -488,38 +580,86 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:7px 0 0}
     gain.gain.value = Math.pow(10, (+$('gain').value) / 20);
     node.connect(gain); node = gain;
 
+    const clipper = ctx.createWaveShaper();
+    clipper.curve = makeClipCurve(+$('clip').value);
+    clipper.oversample = '4x';
+    node.connect(clipper); node = clipper;
+
     const limiter = ctx.createDynamicsCompressor();
     limiter.threshold.value = +$('limit').value;
     limiter.knee.value = 0;
     limiter.ratio.value = 20;
-    limiter.attack.value = 0.002;
-    limiter.release.value = 0.08;
+    limiter.attack.value = 0.0015;
+    limiter.release.value = 0.06;
     node.connect(limiter); node = limiter;
 
     const out = ctx.createGain();
-    let msGains = null;
+    let stereoCtrl = null;
 
     if (channels === 2) {
-      const splitter = ctx.createChannelSplitter(2);
-      const merger = ctx.createChannelMerger(2);
-      const g = +$('width').value / 100;
-      const ll = ctx.createGain(), lr = ctx.createGain(), rl = ctx.createGain(), rr = ctx.createGain();
-      ll.gain.value = (1 + g) / 2;
-      lr.gain.value = (1 - g) / 2;
-      rl.gain.value = (1 - g) / 2;
-      rr.gain.value = (1 + g) / 2;
-      node.connect(splitter);
-      splitter.connect(ll, 0); splitter.connect(lr, 1);
-      splitter.connect(rl, 0); splitter.connect(rr, 1);
-      ll.connect(merger, 0, 0); lr.connect(merger, 0, 0);
-      rl.connect(merger, 0, 1); rr.connect(merger, 0, 1);
-      merger.connect(out);
-      msGains = { ll, lr, rl, rr };
+      // Split into Low (<120Hz) & High (>120Hz) so Mono Bass only sums sub-bass
+      const lowFilter = ctx.createBiquadFilter();
+      lowFilter.type = 'lowpass';
+      lowFilter.frequency.value = 120;
+      lowFilter.Q.value = 0.707;
+
+      const highFilter = ctx.createBiquadFilter();
+      highFilter.type = 'highpass';
+      highFilter.frequency.value = 120;
+      highFilter.Q.value = 0.707;
+
+      node.connect(lowFilter);
+      node.connect(highFilter);
+
+      // Low band M/S matrix (Mono when monoBass checked, else follows width)
+      const lowSplit = ctx.createChannelSplitter(2);
+      const lowMerge = ctx.createChannelMerger(2);
+      const lll = ctx.createGain(), llr = ctx.createGain(), lrl = ctx.createGain(), lrr = ctx.createGain();
+      lowFilter.connect(lowSplit);
+      lowSplit.connect(lll, 0); lowSplit.connect(llr, 1);
+      lowSplit.connect(lrl, 0); lowSplit.connect(lrr, 1);
+      lll.connect(lowMerge, 0, 0); llr.connect(lowMerge, 0, 0);
+      lrl.connect(lowMerge, 0, 1); lrr.connect(lowMerge, 0, 1);
+      lowMerge.connect(out);
+
+      // High band M/S matrix (follows Stereo Width)
+      const hiSplit = ctx.createChannelSplitter(2);
+      const hiMerge = ctx.createChannelMerger(2);
+      const hll = ctx.createGain(), hlr = ctx.createGain(), hrl = ctx.createGain(), hrr = ctx.createGain();
+      highFilter.connect(hiSplit);
+      hiSplit.connect(hll, 0); hiSplit.connect(hlr, 1);
+      hiSplit.connect(hrl, 0); hiSplit.connect(hrr, 1);
+      hll.connect(hiMerge, 0, 0); hlr.connect(hiMerge, 0, 0);
+      hrl.connect(hiMerge, 0, 1); hrr.connect(hiMerge, 0, 1);
+      hiMerge.connect(out);
+
+      stereoCtrl = { lll, llr, lrl, lrr, hll, hlr, hrl, hrr };
+      applyStereoGains(stereoCtrl, ctx.currentTime);
     } else {
       node.connect(out);
     }
 
-    return { input, output: out, hpf, bass, eqNodes, comp, gain, limiter, msGains };
+    return { input, output: out, hpf, bass, eqNodes, comp, gain, clipper, limiter, stereoCtrl };
+  }
+
+  function applyStereoGains(ctrl, t) {
+    if (!ctrl) return;
+    const gHigh = +$('width').value / 100;
+    const gLow = $('monoBass').checked ? 0 : gHigh;
+    const set = (p, v) => p.gain.setTargetAtTime(v, t, 0.015);
+    set(ctrl.lll, (1 + gLow) / 2); set(ctrl.llr, (1 - gLow) / 2);
+    set(ctrl.lrl, (1 - gLow) / 2); set(ctrl.lrr, (1 + gLow) / 2);
+    set(ctrl.hll, (1 + gHigh) / 2); set(ctrl.hlr, (1 - gHigh) / 2);
+    set(ctrl.hrl, (1 - gHigh) / 2); set(ctrl.hrr, (1 + gHigh) / 2);
+  }
+
+  function estimateMasterBoostDb() {
+    const gainDb = +$('gain').value;
+    const clipBoost = (+$('clip').value / 60) * 1.5;
+    const thresh = +$('thresh').value;
+    const ratio = +$('ratio').value;
+    const compReduction = thresh < -6 && ratio > 1 ? Math.max(0, (-6 - thresh) * (1 - 1 / ratio) * 0.25) : 0;
+    return Math.max(-6, Math.min(9, gainDb + clipBoost - compReduction));
   }
 
   function applyLiveParams() {
@@ -531,17 +671,14 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:7px 0 0}
     liveNodes.comp.threshold.setTargetAtTime(+$('thresh').value, t, 0.015);
     liveNodes.comp.ratio.setTargetAtTime(+$('ratio').value, t, 0.015);
     liveNodes.gain.gain.setTargetAtTime(Math.pow(10, (+$('gain').value) / 20), t, 0.015);
+    liveNodes.clipper.curve = makeClipCurve(+$('clip').value);
     liveNodes.limiter.threshold.setTargetAtTime(+$('limit').value, t, 0.015);
-    if (liveNodes.msGains) {
-      const g = +$('width').value / 100;
-      liveNodes.msGains.ll.gain.setTargetAtTime((1 + g) / 2, t, 0.015);
-      liveNodes.msGains.lr.gain.setTargetAtTime((1 - g) / 2, t, 0.015);
-      liveNodes.msGains.rl.gain.setTargetAtTime((1 - g) / 2, t, 0.015);
-      liveNodes.msGains.rr.gain.setTargetAtTime((1 + g) / 2, t, 0.015);
-    }
+    applyStereoGains(liveNodes.stereoCtrl, t);
+
     if (liveNodes.masterWet && liveNodes.rawDry) {
       liveNodes.masterWet.gain.setTargetAtTime(isBypass ? 0 : 1, t, 0.015);
-      liveNodes.rawDry.gain.setTargetAtTime(isBypass ? 1 : 0, t, 0.015);
+      const rawCompGain = $('abMatch').checked ? Math.pow(10, estimateMasterBoostDb() / 20) : 1;
+      liveNodes.rawDry.gain.setTargetAtTime(isBypass ? rawCompGain : 0, t, 0.015);
     }
   }
 
@@ -560,7 +697,7 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:7px 0 0}
     if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
     $('liveMeter').style.width = '0%';
     $('liveDb').textContent = '-∞ dB';
-    drawWaveform();
+    drawCanvas();
   }
 
   async function togglePlay() {
@@ -570,7 +707,8 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:7px 0 0}
       return;
     }
     if (!audioCtx) {
-      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      audioCtx = new AudioCtx();
     }
     if (audioCtx.state === 'suspended') await audioCtx.resume();
 
@@ -579,15 +717,16 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:7px 0 0}
     const masterWet = audioCtx.createGain();
     const rawDry = audioCtx.createGain();
     const analyser = audioCtx.createAnalyser();
-    analyser.fftSize = 1024;
+    analyser.fftSize = 2048;
+    analyser.smoothingTimeConstant = 0.78;
 
     masterWet.gain.value = isBypass ? 0 : 1;
-    rawDry.gain.value = isBypass ? 1 : 0;
+    const rawCompGain = $('abMatch').checked ? Math.pow(10, estimateMasterBoostDb() / 20) : 1;
+    rawDry.gain.value = isBypass ? rawCompGain : 0;
 
     const src = audioCtx.createBufferSource();
     src.buffer = sourceBuffer;
 
-    // Parallel A/B routing (clean glitch-free crossfade)
     src.connect(dsp.input);
     dsp.output.connect(masterWet);
     masterWet.connect(analyser);
@@ -628,17 +767,37 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:7px 0 0}
       $('liveMeter').style.width = pct.toFixed(1) + '%';
       $('liveDb').textContent = db <= -79 ? '-∞ dB' : db.toFixed(1) + ' dBFS';
     }
-    drawWaveform(elapsed / sourceBuffer.duration);
+    drawCanvas(elapsed / sourceBuffer.duration);
     rafId = requestAnimationFrame(tickMeter);
   }
 
-  function drawWaveform(progress = null) {
+  function drawCanvas(progress = null) {
     const canvas = $('waveCanvas');
     const ctx = canvas.getContext('2d');
     const w = canvas.width, h = canvas.height;
     ctx.clearRect(0, 0, w, h);
     ctx.fillStyle = '#090d18';
     ctx.fillRect(0, 0, w, h);
+
+    if (viewMode === 'spec' && isPlaying && liveNodes && liveNodes.analyser) {
+      const bins = liveNodes.analyser.frequencyBinCount;
+      const freqData = new Uint8Array(bins);
+      liveNodes.analyser.getByteFrequencyData(freqData);
+      const bars = 64;
+      const barW = w / bars;
+      for (let i = 0; i < bars; i++) {
+        // Log-ish mapping across bins
+        const idx = Math.min(bins - 1, Math.floor(Math.pow(i / bars, 1.8) * (bins * 0.75)));
+        const val = freqData[idx] / 255;
+        const barH = val * (h - 6);
+        const grad = ctx.createLinearGradient(0, h, 0, h - barH);
+        grad.addColorStop(0, '#43d9e6');
+        grad.addColorStop(1, '#8b7cff');
+        ctx.fillStyle = grad;
+        ctx.fillRect(i * barW + 1, h - barH, Math.max(2, barW - 2), barH);
+      }
+      return;
+    }
 
     if (!sourceBuffer) {
       ctx.fillStyle = '#334060';
@@ -665,20 +824,33 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:7px 0 0}
       ctx.fillRect(x, y1, 1, Math.max(1, y2 - y1));
     }
 
-    // Playhead
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(Math.min(w - 2, Math.max(0, progX)), 0, 2, h);
   }
 
+  $('tabWave').addEventListener('click', () => {
+    viewMode = 'wave';
+    $('tabWave').classList.add('active');
+    $('tabSpec').classList.remove('active');
+    drawCanvas();
+  });
+
+  $('tabSpec').addEventListener('click', () => {
+    viewMode = 'spec';
+    $('tabSpec').classList.add('active');
+    $('tabWave').classList.remove('active');
+    drawCanvas();
+  });
+
   $('waveCanvas').addEventListener('click', e => {
-    if (!sourceBuffer) return;
+    if (!sourceBuffer || viewMode !== 'wave') return;
     const rect = e.target.getBoundingClientRect();
     const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
     const wasPlaying = isPlaying;
     if (wasPlaying) stopPlayback(false);
     playOffset = ratio * sourceBuffer.duration;
     $('timeReadout').textContent = `${fmtTime(playOffset)} / ${fmtTime(sourceBuffer.duration)}`;
-    drawWaveform(ratio);
+    drawCanvas(ratio);
     if (wasPlaying) togglePlay();
   });
 
@@ -696,12 +868,14 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:7px 0 0}
     applyLiveParams();
   });
 
-  function analyzeBuffer(buf) {
+  // K-weighted LUFS + Peak + RMS analysis
+  async function analyzeBufferPro(buf) {
     let peak = 0;
     let sumSq = 0;
     let count = 0;
     let clips = 0;
     const ch = buf.numberOfChannels;
+
     for (let c = 0; c < ch; c++) {
       const data = buf.getChannelData(c);
       for (let i = 0; i < data.length; i++) {
@@ -713,35 +887,54 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:7px 0 0}
         count++;
       }
     }
+
     const rms = Math.sqrt(sumSq / Math.max(1, count));
     const peakDb = peak > 1e-6 ? 20 * Math.log10(peak) : -96;
     const rmsDb = rms > 1e-6 ? 20 * Math.log10(rms) : -96;
-    // Approximate LUFS (RMS-based estimate for stereo music)
-    const approxLufs = rmsDb - 0.7;
-    return { peakDb, rmsDb, approxLufs, clips };
+
+    // K-weighting approximation using OfflineAudioContext (high-shelf +4dB @ 1.5kHz + HPF @ 38Hz)
+    let kLufs = rmsDb - 0.691;
+    try {
+      const off = new OfflineAudioContext(ch, buf.length, buf.sampleRate);
+      const src = off.createBufferSource();
+      src.buffer = buf;
+      const kShelf = off.createBiquadFilter();
+      kShelf.type = 'highshelf';
+      kShelf.frequency.value = 1500;
+      kShelf.gain.value = 4.0;
+      const kHpf = off.createBiquadFilter();
+      kHpf.type = 'highpass';
+      kHpf.frequency.value = 38;
+      src.connect(kShelf);
+      kShelf.connect(kHpf);
+      kHpf.connect(off.destination);
+      src.start(0);
+      const kBuf = await off.startRendering();
+      let kSum = 0;
+      for (let c = 0; c < ch; c++) {
+        const kd = kBuf.getChannelData(c);
+        for (let i = 0; i < kd.length; i++) kSum += kd[i] * kd[i];
+      }
+      const meanSq = kSum / Math.max(1, kBuf.length);
+      kLufs = meanSq > 1e-10 ? -0.691 + 10 * Math.log10(meanSq) : -70;
+    } catch (_) {}
+
+    return { peakDb, rmsDb, kLufs, clips };
   }
 
   function updateKpis(stats) {
     $('kpiPeak').textContent = stats.peakDb.toFixed(1) + ' dBFS';
     $('kpiRms').textContent = stats.rmsDb.toFixed(1) + ' dBFS';
-    $('kpiLufs').textContent = stats.approxLufs.toFixed(1) + ' LUFS';
+    $('kpiLufs').textContent = stats.kLufs.toFixed(1) + ' LUFS';
     $('kpiClip').textContent = stats.clips > 0 ? `${stats.clips} mẫu` : 'An toàn';
     $('kpiClip').style.color = stats.clips > 0 ? 'var(--bad)' : 'var(--good)';
-  }
-
-  function showLoadStatus(text, tone = '') {
-    const el = $('loadStatus');
-    el.style.display = 'block';
-    setStatus('loadStatus', text, tone);
   }
 
   function decodeAudioSafe(ctx, arrayBuffer) {
     return new Promise((resolve, reject) => {
       try {
         const res = ctx.decodeAudioData(arrayBuffer, resolve, reject);
-        if (res && typeof res.then === 'function') {
-          res.then(resolve).catch(reject);
-        }
+        if (res && typeof res.then === 'function') res.then(resolve).catch(reject);
       } catch (err) {
         reject(err);
       }
@@ -757,10 +950,14 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:7px 0 0}
       showLoadStatus(`Định dạng "${file.name}" chưa được hỗ trợ. Vui lòng chọn file MP3, WAV hoặc M4A.`, 'bad');
       return;
     }
+
     stopPlayback(true);
     sourceFile = file;
     sourceBuffer = null;
     masteredBuffer = null;
+
+    // Reset về mặc định theo file gốc mỗi khi nạp bài mới
+    applyPreset('original');
 
     $('filename').textContent = file.name;
     $('filemeta').textContent = `${(file.size / 1048576).toFixed(2)} MB · ${file.type || 'audio'}`;
@@ -784,12 +981,14 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:7px 0 0}
       $('playBtn').disabled = $('stopBtn').disabled = $('abBtn').disabled = false;
       $('render').disabled = $('autoGain').disabled = false;
 
-      if (!$('title').value) $('title').value = file.name.replace(/\.[^.]+$/, '');
-      drawWaveform(0);
-      updateKpis(analyzeBuffer(sourceBuffer));
+      $('title').value = file.name.replace(/\.[^.]+$/, '');
+      drawCanvas(0);
+      const stats = await analyzeBufferPro(sourceBuffer);
+      sourceRmsDb = stats.rmsDb;
+      updateKpis(stats);
       scanProvenance(file);
-      showLoadStatus(`Đã nạp thành công: ${file.name} (${fmtTime(sourceBuffer.duration)})`, 'good');
-      setStatus('exportstatus', 'File đã sẵn sàng. Hãy nhấn Phát để nghe thử & chỉnh thông số, sau đó nhấn “Render & Đo chuẩn xuất”.');
+      showLoadStatus(`Đã nạp: ${file.name} (${sourceBuffer.sampleRate} Hz · ${fmtTime(sourceBuffer.duration)})`, 'good');
+      setStatus('exportstatus', 'Đang ở chế độ Mặc định (Theo file gốc). Chọn 1 trong 5 kiểu đề xuất hoặc tự chỉnh, rồi nhấn “Render & Đo chuẩn xuất”.');
     } catch (e) {
       showLoadStatus('Không giải mã được file trên trình duyệt này. Hãy thử file MP3 hoặc WAV chuẩn khác.', 'bad');
       setStatus('exportstatus', 'Không giải mã được file. Hãy thử file MP3 hoặc WAV chuẩn khác.', 'bad');
@@ -804,7 +1003,12 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:7px 0 0}
   });
   $('drop').addEventListener('dragover', e => { e.preventDefault(); $('drop').classList.add('drag'); });
   $('drop').addEventListener('dragleave', () => $('drop').classList.remove('drag'));
-  $('drop').addEventListener('drop', e => { e.preventDefault(); $('drop').classList.remove('drag'); loadFile(e.dataTransfer.files[0]); });
+  $('drop').addEventListener('drop', e => {
+    e.preventDefault();
+    $('drop').classList.remove('drag');
+    const f = e.dataTransfer.files && e.dataTransfer.files[0];
+    if (f) loadFile(f);
+  });
 
   $('clear').addEventListener('click', () => {
     stopPlayback(true);
@@ -820,33 +1024,30 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:7px 0 0}
     $('kpiLufs').textContent = '-- LUFS';
     $('kpiClip').textContent = 'An toàn';
     $('kpiClip').style.color = '';
-    drawWaveform();
+    drawCanvas();
     setStatus('provenance', 'Chọn file để quét dấu hiệu metadata và Content Credentials.');
-    setStatus('exportstatus', 'Chưa có bản render. Hãy nạp file, chỉnh thông số và nhấn “Render & Đo chuẩn xuất”.');
+    setStatus('exportstatus', 'Mặc định đang giữ nguyên theo file gốc. Hãy nạp file rồi nhấn “Render & Đo chuẩn xuất”.');
   });
 
-  // Safe chunked ASCII + UTF-16LE/BE provenance scan
   async function scanProvenance(file) {
     setStatus('provenance', 'Đang quét các chuỗi metadata phổ biến…');
     try {
       const buf = await file.arrayBuffer();
       const bytes = new Uint8Array(buf);
       const decoderLatin = new TextDecoder('latin1');
-      let found = new Set();
+      const found = new Set();
       const terms = ['suno', 'c2pa', 'content credentials', 'content_credentials', 'manifest', 'jumbf'];
-      const chunk = 262144; // 256 KB with overlap
+      const chunk = 262144;
       for (let i = 0; i < bytes.length; i += (chunk - 64)) {
         const slice = bytes.subarray(i, Math.min(i + chunk, bytes.length));
         const text = decoderLatin.decode(slice).toLowerCase();
-        for (const t of terms) {
-          if (text.includes(t)) found.add(t);
-        }
+        for (const t of terms) if (text.includes(t)) found.add(t);
       }
       const list = Array.from(found);
       if (list.length) {
         setStatus('provenance', `Phát hiện chuỗi có thể liên quan: ${list.join(', ')}. Đây chỉ là quét chuỗi thô, KHÔNG xác minh được tính hợp lệ của chứng thực.`, 'warn');
       } else {
-        setStatus('provenance', 'Không tìm thấy các chuỗi dò phổ biến trong dữ liệu file. Điều này KHÔNG chứng minh file không được tạo bằng Suno hoặc không có provenance.');
+        setStatus('provenance', 'Không tìm thấy các chuỗi dò phổ biến trong dữ liệu file. Điều này KHÔNG chứng minh file không có provenance.');
       }
     } catch (_) {
       setStatus('provenance', 'Không thể quét file.', 'bad');
@@ -854,12 +1055,10 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:7px 0 0}
   }
   $('scan').addEventListener('click', () => sourceFile && scanProvenance(sourceFile));
 
-  // Auto-Gain helper based on source peak & limiter ceiling
-  $('autoGain').addEventListener('click', () => {
+  $('autoGain').addEventListener('click', async () => {
     if (!sourceBuffer) return;
-    const stats = analyzeBuffer(sourceBuffer);
+    const stats = await analyzeBufferPro(sourceBuffer);
     const ceiling = +$('limit').value;
-    // Target ~2 dB into limiter for clean punch without over-squashing
     let suggested = (ceiling - stats.peakDb) + 1.5;
     suggested = Math.max(-6, Math.min(9, Math.round(suggested * 10) / 10));
     $('gain').value = suggested;
@@ -869,11 +1068,10 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:7px 0 0}
     clearActivePreset();
   });
 
-  // Offline high-precision render
   async function renderMaster() {
     if (!sourceBuffer) return;
     $('render').disabled = true;
-    setStatus('exportstatus', 'Đang render bằng OfflineAudioContext…');
+    setStatus('exportstatus', 'Đang render bằng OfflineAudioContext theo chuẩn file gốc…');
     try {
       const rate = sourceBuffer.sampleRate;
       const frames = sourceBuffer.length;
@@ -889,14 +1087,14 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:7px 0 0}
 
       const rendered = await off.startRendering();
       masteredBuffer = rendered;
-      const stats = analyzeBuffer(rendered);
+      const stats = await analyzeBufferPro(rendered);
       updateKpis(stats);
 
       $('mp3').disabled = false;
       $('wav').disabled = false;
       setStatus(
         'exportstatus',
-        `Render hoàn tất · ${fmtTime(rendered.duration)} · ${rendered.sampleRate} Hz · ${rendered.numberOfChannels} kênh.\nPeak: ${stats.peakDb.toFixed(1)} dBFS | Ước lượng: ${stats.approxLufs.toFixed(1)} LUFS. Sẵn sàng xuất MP3 hoặc WAV.`,
+        `Render hoàn tất · ${fmtTime(rendered.duration)} · ${rendered.sampleRate} Hz · ${rendered.numberOfChannels} kênh.\nPeak: ${stats.peakDb.toFixed(1)} dBFS | K-Weighted: ${stats.kLufs.toFixed(1)} LUFS. Sẵn sàng xuất 1 file hoàn chỉnh.`,
         'good'
       );
     } catch (err) {
@@ -907,7 +1105,7 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:7px 0 0}
   }
   $('render').addEventListener('click', renderMaster);
 
-  // Encode WAV (16-bit or 24-bit) with proper RIFF LIST/INFO metadata
+  // Encode WAV 24-bit with RIFF LIST/INFO + TPDF dithering for clean quantization
   function encodeWav(buf, bits = 24) {
     const ch = buf.numberOfChannels;
     const sr = buf.sampleRate;
@@ -928,18 +1126,12 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:7px 0 0}
       const pad = strBytes.length % 2;
       const sub = new Uint8Array(8 + strBytes.length + pad);
       for (let i = 0; i < 4; i++) sub[i] = id.charCodeAt(i);
-      const dv = new DataView(sub.buffer);
-      dv.setUint32(4, strBytes.length, true);
+      new DataView(sub.buffer).setUint32(4, strBytes.length, true);
       sub.set(strBytes, 8);
       return sub;
     });
 
-    let listSize = 0;
-    if (infoChunks.length) {
-      const innerLen = infoChunks.reduce((a, b) => a + b.length, 0);
-      listSize = 12 + innerLen; // 'LIST' + size(4) + 'INFO' + subchunks
-    }
-
+    const listSize = infoChunks.length ? 12 + infoChunks.reduce((a, b) => a + b.length, 0) : 0;
     const totalSize = 44 + dataSize + listSize;
     const ab = new ArrayBuffer(totalSize);
     const v = new DataView(ab);
@@ -962,9 +1154,11 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:7px 0 0}
 
     let o = 44;
     if (bits === 24) {
+      const ditherAmp = 1 / 8388608;
       for (let i = 0; i < frames; i++) {
         for (let c = 0; c < ch; c++) {
-          const s = Math.max(-1, Math.min(1, buf.getChannelData(c)[i]));
+          const tpdf = (Math.random() - Math.random()) * ditherAmp;
+          const s = Math.max(-1, Math.min(1, buf.getChannelData(c)[i] + tpdf));
           const x = Math.round(s * (s < 0 ? 8388608 : 8388607));
           v.setUint8(o++, x & 255);
           v.setUint8(o++, (x >> 8) & 255);
@@ -975,8 +1169,7 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:7px 0 0}
       for (let i = 0; i < frames; i++) {
         for (let c = 0; c < ch; c++) {
           const s = Math.max(-1, Math.min(1, buf.getChannelData(c)[i]));
-          const x = Math.round(s * (s < 0 ? 32768 : 32767));
-          v.setInt16(o, x, true);
+          v.setInt16(o, Math.round(s * (s < 0 ? 32768 : 32767)), true);
           o += 2;
         }
       }
@@ -996,18 +1189,15 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:7px 0 0}
     return new Blob([ab], { type: 'audio/wav' });
   }
 
-  // Proper ID3v2.3 tagger (handles COMM frame properly)
   function concatU8(arr) {
-    const total = arr.reduce((a, b) => a + b.length, 0);
-    const out = new Uint8Array(total);
+    const out = new Uint8Array(arr.reduce((a, b) => a + b.length, 0));
     let p = 0;
     arr.forEach(a => { out.set(a, p); p += a.length; });
     return out;
   }
 
   function id3TextFrame(id, text) {
-    const enc = new TextEncoder().encode(text);
-    const data = concatU8([new Uint8Array([3]), enc]); // UTF-8
+    const data = concatU8([new Uint8Array([3]), new TextEncoder().encode(text)]);
     const head = new Uint8Array(10);
     for (let i = 0; i < 4; i++) head[i] = id.charCodeAt(i);
     const len = data.length;
@@ -1016,9 +1206,7 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:7px 0 0}
   }
 
   function id3CommentFrame(text) {
-    const enc = new TextEncoder().encode(text);
-    // Encoding(3=UTF8), Lang('vie'), ShortDesc(0x00), Text
-    const data = concatU8([new Uint8Array([3, 118, 105, 101, 0]), enc]);
+    const data = concatU8([new Uint8Array([3, 118, 105, 101, 0]), new TextEncoder().encode(text)]);
     const head = new Uint8Array(10);
     'COMM'.split('').forEach((c, i) => head[i] = c.charCodeAt(0));
     const len = data.length;
@@ -1057,9 +1245,11 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:7px 0 0}
 
   function to16(f) {
     const out = new Int16Array(f.length);
+    const ditherAmp = 1 / 32768;
     for (let i = 0; i < f.length; i++) {
-      const s = Math.max(-1, Math.min(1, f[i]));
-      out[i] = s < 0 ? s * 32768 : s * 32767;
+      const tpdf = (Math.random() - Math.random()) * ditherAmp;
+      const s = Math.max(-1, Math.min(1, f[i] + tpdf));
+      out[i] = Math.round(s < 0 ? s * 32768 : s * 32767);
     }
     return out;
   }
@@ -1068,13 +1258,13 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:7px 0 0}
     if (!masteredBuffer) return;
     const blob = encodeWav(masteredBuffer, 24);
     download(blob, safeName() + '_24bit.wav');
-    setStatus('exportstatus', 'Đã xuất WAV PCM 24-bit kèm RIFF INFO metadata.', 'good');
+    setStatus('exportstatus', 'Đã xuất WAV PCM 24-bit (TPDF Dither + RIFF INFO metadata).', 'good');
   });
 
   $('mp3').addEventListener('click', () => {
     if (!masteredBuffer) return;
     if (!window.lamejs) {
-      setStatus('exportstatus', 'Không tải được thư viện mã hóa MP3 (lamejs). Hãy kiểm tra kết nối Internet và tải lại trang.', 'bad');
+      setStatus('exportstatus', 'Không tải được thư viện mã hóa MP3 (lamejs). Hãy kiểm tra Internet và tải lại trang.', 'bad');
       return;
     }
     $('mp3').disabled = true;
@@ -1088,7 +1278,7 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:7px 0 0}
     const right = channels > 1 ? to16(masteredBuffer.getChannelData(1)) : null;
     const parts = [];
     const block = 1152;
-    const chunkBlocks = 150; // yield to UI every ~150 blocks
+    const chunkBlocks = 150;
     let idx = 0;
 
     function step() {
@@ -1109,10 +1299,9 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:7px 0 0}
         } else {
           const end = encoder.flush();
           if (end.length) parts.push(new Uint8Array(end));
-          const raw = new Blob(parts, { type: 'audio/mpeg' });
-          const tagged = addID3(raw);
+          const tagged = addID3(new Blob(parts, { type: 'audio/mpeg' }));
           download(tagged, safeName() + '_320kbps.mp3');
-          setStatus('exportstatus', 'Đã xuất MP3 320 kbps kèm thẻ ID3v2.3 hoàn chỉnh.', 'good');
+          setStatus('exportstatus', 'Đã xuất MP3 320 kbps (TPDF Dither + ID3v2.3 hoàn chỉnh).', 'good');
           $('mp3').disabled = false;
           $('wav').disabled = false;
         }
@@ -1125,7 +1314,8 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:7px 0 0}
     setTimeout(step, 10);
   });
 
-  drawWaveform();
+  syncLabels();
+  drawCanvas();
 })();
 </script>
 </body>
