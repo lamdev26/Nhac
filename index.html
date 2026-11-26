@@ -1,0 +1,1099 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101322">
+<title>LUMI MASTER STUDIO · Pro Browser Mastering</title>
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#090c15;
+  --panel:#131828;
+  --panel2:#181f33;
+  --line:#28334e;
+  --txt:#eef2ff;
+  --muted:#95a3c2;
+  --accent:#8b7cff;
+  --cyan:#43d9e6;
+  --good:#4bd49b;
+  --warn:#ffca70;
+  --bad:#ff6b81;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:radial-gradient(circle at 12% 0%,#1f2349 0%,transparent 36%),radial-gradient(circle at 88% 10%,#122b3e 0%,transparent 32%),var(--bg);
+  color:var(--txt);
+  font:14px/1.5 "Inter",system-ui,-apple-system,Segoe UI,sans-serif;
+}
+header{
+  padding:16px max(18px,calc((100vw - 1220px)/2));
+  border-bottom:1px solid var(--line);
+  background:#090c15d8;
+  position:sticky;
+  top:0;
+  z-index:20;
+  backdrop-filter:blur(14px);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{
+  width:40px;height:40px;border-radius:12px;
+  background:linear-gradient(135deg,var(--accent),var(--cyan));
+  display:grid;place-items:center;
+  color:#080b16;font-weight:900;font-size:18px;
+  box-shadow:0 6px 20px #8b7cff44;
+}
+.brand h1{font-size:16px;letter-spacing:.12em;margin:0}
+.brand p{margin:0;color:var(--muted);font-size:11px}
+.header-pills{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.pill{
+  border:1px solid #414d72;color:#c8c3ff;
+  padding:6px 11px;border-radius:999px;font-size:11px;white-space:nowrap;
+  background:#121728;
+}
+.pill.live{border-color:#266951;color:var(--good);background:#0f241d}
+main{max-width:1220px;margin:20px auto;padding:0 18px 60px}
+.hero{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin:12px 0 18px;flex-wrap:wrap}
+.hero h2{font-size:clamp(24px,3.6vw,34px);line-height:1.15;margin:0 0 6px}
+.hero p{margin:0;color:var(--muted);max-width:720px}
+.notice{
+  padding:11px 14px;border-radius:12px;
+  background:#1a1c34;border:1px solid #3c4069;
+  color:#d9dcff;font-size:12.5px;margin-bottom:16px;
+}
+.grid{display:grid;grid-template-columns:1.08fr .92fr;gap:16px}
+.panel{
+  background:linear-gradient(180deg,#161c2e,#101524);
+  border:1px solid var(--line);border-radius:18px;padding:18px;
+  box-shadow:0 12px 35px #0003;
+}
+.panel h3{margin:0 0 12px;font-size:15.5px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.muted{color:var(--muted)}
+.drop{
+  display:block;border:1.5px dashed #556288;border-radius:14px;
+  padding:22px;text-align:center;background:#0e1424;cursor:pointer;
+  transition:border-color .2s,background .2s;
+}
+.drop:hover,.drop.drag{border-color:var(--cyan);background:#142339}
+.drop strong{display:block;font-size:15.5px;margin-bottom:3px}
+.drop small{color:var(--muted)}
+input,select,button{font:inherit}
+input[type=file]{display:none}
+.btn{
+  border:0;border-radius:10px;padding:9px 14px;
+  background:linear-gradient(110deg,var(--accent),#5e9cff);
+  color:#fff;font-weight:700;cursor:pointer;
+  transition:transform .12s,opacity .15s,filter .15s;
+}
+.btn:hover:not(:disabled){filter:brightness(1.08)}
+.btn:active:not(:disabled){transform:translateY(1px)}
+.btn.secondary{background:#222b44;border:1px solid #384668;color:var(--txt)}
+.btn.ab{background:#1d253b;border:1px solid #485780;color:var(--muted)}
+.btn.ab.active-master{background:linear-gradient(110deg,#1e6f5c,#27a084);border-color:#4bd49b;color:#fff}
+.btn.ab.active-raw{background:linear-gradient(110deg,#7c5420,#b07b2e);border-color:#ffca70;color:#fff}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:11px;align-items:center}
+.fileinfo{
+  margin-top:12px;padding:11px 13px;border-radius:12px;
+  background:#0e1424;border:1px solid #26314c;display:none;
+}
+.fileinfo b{display:block;overflow-wrap:anywhere}
+.transport{
+  background:#0d1322;border:1px solid #26314d;border-radius:14px;padding:12px;margin-top:12px;
+}
+canvas.wave{
+  width:100%;height:78px;display:block;border-radius:8px;
+  background:#090d18;cursor:pointer;margin-bottom:10px;
+}
+.transport-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:space-between}
+.time-readout{font-variant-numeric:tabular-nums;font-size:12.5px;color:var(--cyan);font-weight:600}
+.meter-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+.kpi{background:#0e1424;border:1px solid #25304a;border-radius:11px;padding:9px 10px}
+.kpi span{display:block;font-size:11px;color:var(--muted)}
+.kpi b{font-size:14px;font-variant-numeric:tabular-nums}
+.meter-wrap{margin-top:10px}
+.meter-label{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:4px}
+.meter{height:8px;background:#222b42;border-radius:99px;overflow:hidden}
+.meter>i{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--good) 0%,var(--cyan) 65%,var(--warn) 86%,var(--bad) 100%);transition:width .06s linear}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.field{display:flex;flex-direction:column;gap:4px}
+.field label{font-size:11.5px;color:var(--muted)}
+.field input,.field select{
+  width:100%;background:#0c1220;color:var(--txt);
+  border:1px solid #323e5c;border-radius:9px;padding:8.5px 10px;
+}
+.presets{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.preset-btn{
+  background:#141b2f;border:1px solid #2e3b5c;color:var(--muted);
+  border-radius:8px;padding:6px 10px;font-size:12px;cursor:pointer;
+}
+.preset-btn.active{border-color:var(--cyan);color:var(--cyan);background:#132539;font-weight:600}
+.control{padding:9px 0;border-bottom:1px solid #242d44}
+.control:last-child{border:0}
+.controltop{display:flex;justify-content:space-between;gap:12px;align-items:center}
+.control label{font-weight:600;font-size:13.5px}
+.value{color:var(--cyan);font-variant-numeric:tabular-nums;font-size:13px;font-weight:600}
+input[type=range]{width:100%;accent-color:var(--accent);margin:7px 0 0}
+.eqgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:8px}
+.eq{background:#0e1424;border:1px solid #26314c;border-radius:12px;padding:10px 4px;text-align:center}
+.eq label{font-size:11px;color:var(--muted);display:block;line-height:1.25}
+.eq input{writing-mode:vertical-lr;direction:rtl;height:96px;width:22px;accent-color:var(--cyan);display:block;margin:8px auto}
+.eq b{font-size:11.5px;font-variant-numeric:tabular-nums}
+.status{
+  padding:11px 13px;border-radius:12px;background:#0e1424;
+  border:1px solid #2b3754;font-size:12.5px;white-space:pre-wrap;overflow-wrap:anywhere;
+}
+.status.good{border-color:#28684f;color:#b8f5dc}
+.status.warn{border-color:#795b2c;color:#ffe4b0}
+.status.bad{border-color:#793d4b;color:#ffc2cc}
+.exportgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.exportbox{background:#0e1424;border:1px solid #293550;border-radius:13px;padding:14px}
+.exportbox h4{margin:0 0 4px;font-size:14.5px}
+.exportbox p{margin:0;color:var(--muted);font-size:12px}
+.footer{margin-top:18px;color:var(--muted);font-size:12px;text-align:center}
+@media(max-width:900px){
+  .grid{grid-template-columns:1fr}
+  .meter-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:540px){
+  header{position:static}
+  .fields,.exportgrid{grid-template-columns:1fr}
+  .panel{padding:14px}
+  .eqgrid{gap:4px}
+  .eq input{height:82px}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="logo">LM</div>
+    <div>
+      <h1>LUMI MASTER STUDIO</h1>
+      <p>REAL-TIME BROWSER AUDIO MASTERING · MP3 / WAV</p>
+    </div>
+  </div>
+  <div class="header-pills">
+    <span class="pill live" id="engineBadge">REAL-TIME DSP</span>
+    <span class="pill">100% CỤC BỘ TRÊN THIẾT BỊ</span>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div>
+      <h2>Master âm thanh<br><span style="color:#a9a0ff">nghe trực tiếp &amp; xuất chuẩn sạch.</span></h2>
+      <p>Nghe thử thời gian thực, so sánh A/B tức thì giữa bản gốc và bản master, cắt sub-rumble, EQ 5 dải, compressor, limiter và xuất MP3 320 kbps hoặc WAV 24-bit kèm metadata chuẩn.</p>
+    </div>
+  </section>
+
+  <div class="notice">
+    Lưu ý nguồn gốc: ứng dụng có thể quét dấu hiệu metadata/C2PA hiện diện trong file, nhưng không thể xác minh chữ ký C2PA ngoại tuyến hay biến file AI thành file không có nguồn gốc AI. Chứng thực nguồn gốc không bị cố ý giả mạo.
+  </div>
+
+  <div class="grid">
+    <!-- LEFT COLUMN -->
+    <div class="panel">
+      <h3>01 · Nạp file &amp; Trình phát A/B</h3>
+      <label class="drop" id="drop">
+        <strong>Kéo thả MP3 hoặc WAV vào đây</strong>
+        <small>hoặc chạm để chọn file từ thiết bị · xử lý hoàn toàn trong RAM</small>
+        <input id="file" type="file" accept=".mp3,.wav,audio/mpeg,audio/wav,audio/x-wav">
+      </label>
+
+      <div class="fileinfo" id="fileinfo">
+        <b id="filename"></b>
+        <span class="muted" id="filemeta"></span>
+        <div class="actions">
+          <button class="btn secondary" id="clear">Gỡ file</button>
+        </div>
+      </div>
+
+      <div class="transport">
+        <canvas class="wave" id="waveCanvas" width="600" height="78"></canvas>
+        <div class="transport-row">
+          <div class="actions" style="margin:0">
+            <button class="btn" id="playBtn" disabled>Phát</button>
+            <button class="btn secondary" id="stopBtn" disabled>Dừng</button>
+            <button class="btn ab active-master" id="abBtn" disabled>Đang nghe: MASTER</button>
+          </div>
+          <span class="time-readout" id="timeReadout">0:00 / 0:00</span>
+        </div>
+
+        <div class="meter-grid">
+          <div class="kpi"><span>Đỉnh thực (Peak)</span><b id="kpiPeak">-- dBFS</b></div>
+          <div class="kpi"><span>Âm lượng (RMS)</span><b id="kpiRms">-- dBFS</b></div>
+          <div class="kpi"><span>Ước lượng LUFS</span><b id="kpiLufs">-- LUFS</b></div>
+          <div class="kpi"><span>Trạng thái Clip</span><b id="kpiClip">An toàn</b></div>
+        </div>
+        <div class="meter-wrap">
+          <div class="meter-label"><span>Mức đầu ra thời gian thực</span><span id="liveDb">-∞ dB</span></div>
+          <div class="meter"><i id="liveMeter"></i></div>
+        </div>
+      </div>
+
+      <div style="margin-top:18px">
+        <h3>02 · Metadata xuất file</h3>
+        <div class="fields">
+          <div class="field"><label>Tên bài hát (Title)</label><input id="title" placeholder="Tên bài hát"></div>
+          <div class="field"><label>Nghệ sĩ (Artist)</label><input id="artist" placeholder="Tên nghệ sĩ"></div>
+          <div class="field"><label>Album</label><input id="album" placeholder="Tên album"></div>
+          <div class="field"><label>Comment</label><input id="comment" placeholder="Ghi chú (tùy chọn)"></div>
+        </div>
+        <p class="muted" style="font-size:11.5px;margin:8px 0 0">Metadata được ghi chuẩn ID3v2.3 (MP3) và RIFF LIST/INFO (WAV) theo thông tin bạn nhập.</p>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div class="panel">
+      <h3>03 · Preset &amp; Bộ xử lý Master</h3>
+      <div class="presets" id="presets">
+        <button class="preset-btn active" data-preset="flat">Mặc định (Flat)</button>
+        <button class="preset-btn" data-preset="edm">EDM / Vinahouse</button>
+        <button class="preset-btn" data-preset="vocal">Vocal / Ballad</button>
+        <button class="preset-btn" data-preset="streaming">Streaming -14 LUFS</button>
+        <button class="preset-btn" data-preset="lofi">Lo-Fi / Chill</button>
+      </div>
+
+      <div class="control">
+        <div class="controltop"><label>Sub-cut High-pass</label><span class="value" id="hpfv">30 Hz</span></div>
+        <input id="hpf" type="range" min="20" max="100" value="30" step="2">
+      </div>
+      <div class="control">
+        <div class="controltop"><label>Output gain</label><span class="value" id="gainv">0 dB</span></div>
+        <input id="gain" type="range" min="-6" max="9" value="0" step="0.1">
+      </div>
+      <div class="control">
+        <div class="controltop"><label>Bass boost (120 Hz)</label><span class="value" id="bassv">0 dB</span></div>
+        <input id="bass" type="range" min="-6" max="9" value="0" step="0.1">
+      </div>
+      <div class="control">
+        <div class="controltop"><label>Compressor threshold</label><span class="value" id="threshv">-18 dB</span></div>
+        <input id="thresh" type="range" min="-36" max="0" value="-18" step="1">
+      </div>
+      <div class="control">
+        <div class="controltop"><label>Compressor ratio</label><span class="value" id="ratiov">3:1</span></div>
+        <input id="ratio" type="range" min="1" max="12" value="3" step="0.5">
+      </div>
+      <div class="control">
+        <div class="controltop"><label>Limiter ceiling</label><span class="value" id="limitv">-1 dB</span></div>
+        <input id="limit" type="range" min="-6" max="-0.1" value="-1" step="0.1">
+      </div>
+      <div class="control">
+        <div class="controltop"><label>Stereo width (M/S)</label><span class="value" id="widthv">100%</span></div>
+        <input id="width" type="range" min="0" max="150" value="100" step="1">
+      </div>
+
+      <h3 style="margin-top:14px">EQ 5 dải</h3>
+      <div class="eqgrid" id="eqgrid"></div>
+
+      <div class="actions" style="margin-top:14px">
+        <button class="btn" id="render" disabled>Render &amp; Đo chuẩn xuất</button>
+        <button class="btn secondary" id="autoGain" disabled>Auto-Gain tối ưu</button>
+        <button class="btn secondary" id="reset">Đặt lại</button>
+      </div>
+      <div class="muted" style="font-size:11.5px;margin-top:8px">
+        Kéo thanh trượt sẽ tác động trực tiếp khi đang phát. Nhấn “Render &amp; Đo chuẩn xuất” để tạo file chất lượng cao và kiểm tra đỉnh/LUFS.
+      </div>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-top:16px">
+    <h3>04 · Nguồn gốc &amp; kiểm tra dấu vết</h3>
+    <div class="status" id="provenance">Chọn file để quét dấu hiệu metadata và Content Credentials.</div>
+    <div class="actions"><button class="btn secondary" id="scan" disabled>Quét lại dấu hiệu</button></div>
+    <p class="muted" style="font-size:11.5px;margin:8px 0 0">
+      Tìm thấy chuỗi “Suno”, “C2PA” hay “Content Credentials” chỉ là dấu hiệu sơ bộ. Muốn xác minh cần công cụ đọc manifest/chữ ký C2PA chuyên dụng. Không thấy dấu hiệu cũng không chứng minh file không phải AI.
+    </p>
+  </div>
+
+  <div class="panel" style="margin-top:16px">
+    <h3>05 · Xuất file đã master</h3>
+    <div class="exportgrid">
+      <div class="exportbox">
+        <h4>MP3 · 320 kbps</h4>
+        <p>Mã hóa MP3 CBR 320 kbps, ghi thẻ ID3v2.3 (Title, Artist, Album, Comment UTF-8).</p>
+        <div class="actions"><button class="btn" id="mp3" disabled>Xuất MP3 320</button></div>
+      </div>
+      <div class="exportbox">
+        <h4>WAV · PCM 24-bit</h4>
+        <p>Không nén 24-bit PCM, kèm chunk RIFF LIST/INFO metadata cơ bản.</p>
+        <div class="actions"><button class="btn" id="wav" disabled>Xuất WAV 24-bit</button></div>
+      </div>
+    </div>
+    <div class="status" id="exportstatus" style="margin-top:12px">Chưa có bản render. Hãy nạp file, chỉnh thông số và nhấn “Render &amp; Đo chuẩn xuất”.</div>
+  </div>
+
+  <div class="footer">LUMI MASTER STUDIO · Xử lý âm thanh Web Audio API cục bộ · Cần Internet lần đầu để tải thư viện mã hóa MP3 (lamejs).</div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/lamejs@1.2.1/lame.min.js"></script>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+
+  // State
+  let sourceFile = null;
+  let sourceBuffer = null;
+  let masteredBuffer = null;
+
+  // Live playback state
+  let audioCtx = null;
+  let liveSource = null;
+  let liveNodes = null;
+  let isPlaying = false;
+  let isBypass = false;
+  let playOffset = 0;
+  let playStartTime = 0;
+  let rafId = null;
+
+  const eqDefs = [['Low', 80], ['Low-mid', 250], ['Mid', 1000], ['High-mid', 4000], ['High', 12000]];
+  const eqValues = [0, 0, 0, 0, 0];
+
+  const PRESETS = {
+    flat:      { hpf: 30, gain: 0,   bass: 0,   thresh: -18, ratio: 3,   limit: -1.0, width: 100, eq: [0, 0, 0, 0, 0] },
+    edm:       { hpf: 32, gain: 2.2, bass: 3.0, thresh: -14, ratio: 4.5, limit: -0.8, width: 112, eq: [1.5, -1.5, 0.5, 2.0, 2.5] },
+    vocal:     { hpf: 40, gain: 1.5, bass: 1.0, thresh: -20, ratio: 2.5, limit: -1.0, width: 102, eq: [-1.0, 0.5, 2.0, 1.5, 1.0] },
+    streaming: { hpf: 30, gain: 1.2, bass: 1.0, thresh: -18, ratio: 3.0, limit: -1.0, width: 105, eq: [0.5, -0.5, 0.5, 1.0, 1.0] },
+    lofi:      { hpf: 36, gain: 0.5, bass: 2.5, thresh: -22, ratio: 2.5, limit: -1.5, width: 90,  eq: [2.0, 1.0, -0.5, -2.0, -4.0] }
+  };
+
+  // Build EQ sliders
+  $('eqgrid').innerHTML = eqDefs.map((e, i) =>
+    `<div class="eq"><label>${e[0]}<br>${e[1]} Hz</label><input aria-label="${e[0]}" type="range" min="-9" max="9" step="0.5" value="0" data-eq="${i}"><b id="eqv${i}">0 dB</b></div>`
+  ).join('');
+
+  const controls = ['hpf', 'gain', 'bass', 'thresh', 'ratio', 'limit', 'width'];
+  const suffix = { hpf: ' Hz', gain: ' dB', bass: ' dB', thresh: ' dB', ratio: ':1', limit: ' dB', width: '%' };
+
+  function setStatus(elId, text, tone = '') {
+    const el = $(elId);
+    el.className = 'status' + (tone ? ' ' + tone : '');
+    el.textContent = text;
+  }
+
+  function fmtTime(s) {
+    if (!isFinite(s) || s < 0) s = 0;
+    return `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+  }
+
+  function invalidateRender() {
+    masteredBuffer = null;
+    $('mp3').disabled = true;
+    $('wav').disabled = true;
+    if (sourceBuffer) {
+      setStatus('exportstatus', 'Thông số đã thay đổi. Hãy nhấn “Render & Đo chuẩn xuất” để tạo bản xuất mới.');
+    }
+  }
+
+  function syncLabels() {
+    controls.forEach(id => $(id + 'v').textContent = $(id).value + suffix[id]);
+    eqValues.forEach((v, i) => $('eqv' + i).textContent = v + ' dB');
+  }
+
+  controls.forEach(id => $(id).addEventListener('input', () => {
+    syncLabels();
+    applyLiveParams();
+    invalidateRender();
+    clearActivePreset();
+  }));
+
+  document.querySelectorAll('[data-eq]').forEach(el => el.addEventListener('input', () => {
+    eqValues[+el.dataset.eq] = +el.value;
+    syncLabels();
+    applyLiveParams();
+    invalidateRender();
+    clearActivePreset();
+  }));
+
+  function clearActivePreset() {
+    document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+  }
+
+  function applyPreset(name) {
+    const p = PRESETS[name];
+    if (!p) return;
+    $('hpf').value = p.hpf;
+    $('gain').value = p.gain;
+    $('bass').value = p.bass;
+    $('thresh').value = p.thresh;
+    $('ratio').value = p.ratio;
+    $('limit').value = p.limit;
+    $('width').value = p.width;
+    document.querySelectorAll('[data-eq]').forEach((el, i) => {
+      el.value = p.eq[i];
+      eqValues[i] = p.eq[i];
+    });
+    syncLabels();
+    applyLiveParams();
+    invalidateRender();
+    document.querySelectorAll('.preset-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.preset === name);
+    });
+  }
+
+  document.querySelectorAll('.preset-btn').forEach(btn => {
+    btn.addEventListener('click', () => applyPreset(btn.dataset.preset));
+  });
+
+  $('reset').addEventListener('click', () => applyPreset('flat'));
+
+  // Build reusable DSP chain on any BaseAudioContext (AudioContext or OfflineAudioContext)
+  function buildDspChain(ctx, channels) {
+    const input = ctx.createGain();
+    const hpf = ctx.createBiquadFilter();
+    hpf.type = 'highpass';
+    hpf.frequency.value = +$('hpf').value;
+    hpf.Q.value = 0.707;
+
+    const bass = ctx.createBiquadFilter();
+    bass.type = 'lowshelf';
+    bass.frequency.value = 120;
+    bass.gain.value = +$('bass').value;
+
+    let node = input;
+    node.connect(hpf); node = hpf;
+    node.connect(bass); node = bass;
+
+    const eqNodes = eqDefs.map((def, i) => {
+      const f = ctx.createBiquadFilter();
+      f.type = 'peaking';
+      f.frequency.value = def[1];
+      f.Q.value = 1.0;
+      f.gain.value = eqValues[i];
+      node.connect(f);
+      node = f;
+      return f;
+    });
+
+    const comp = ctx.createDynamicsCompressor();
+    comp.threshold.value = +$('thresh').value;
+    comp.knee.value = 18;
+    comp.ratio.value = +$('ratio').value;
+    comp.attack.value = 0.012;
+    comp.release.value = 0.22;
+    node.connect(comp); node = comp;
+
+    const gain = ctx.createGain();
+    gain.gain.value = Math.pow(10, (+$('gain').value) / 20);
+    node.connect(gain); node = gain;
+
+    const limiter = ctx.createDynamicsCompressor();
+    limiter.threshold.value = +$('limit').value;
+    limiter.knee.value = 0;
+    limiter.ratio.value = 20;
+    limiter.attack.value = 0.002;
+    limiter.release.value = 0.08;
+    node.connect(limiter); node = limiter;
+
+    const out = ctx.createGain();
+    let msGains = null;
+
+    if (channels === 2) {
+      const splitter = ctx.createChannelSplitter(2);
+      const merger = ctx.createChannelMerger(2);
+      const g = +$('width').value / 100;
+      const ll = ctx.createGain(), lr = ctx.createGain(), rl = ctx.createGain(), rr = ctx.createGain();
+      ll.gain.value = (1 + g) / 2;
+      lr.gain.value = (1 - g) / 2;
+      rl.gain.value = (1 - g) / 2;
+      rr.gain.value = (1 + g) / 2;
+      node.connect(splitter);
+      splitter.connect(ll, 0); splitter.connect(lr, 1);
+      splitter.connect(rl, 0); splitter.connect(rr, 1);
+      ll.connect(merger, 0, 0); lr.connect(merger, 0, 0);
+      rl.connect(merger, 0, 1); rr.connect(merger, 0, 1);
+      merger.connect(out);
+      msGains = { ll, lr, rl, rr };
+    } else {
+      node.connect(out);
+    }
+
+    return { input, output: out, hpf, bass, eqNodes, comp, gain, limiter, msGains };
+  }
+
+  function applyLiveParams() {
+    if (!liveNodes || !audioCtx) return;
+    const t = audioCtx.currentTime;
+    liveNodes.hpf.frequency.setTargetAtTime(+$('hpf').value, t, 0.015);
+    liveNodes.bass.gain.setTargetAtTime(+$('bass').value, t, 0.015);
+    liveNodes.eqNodes.forEach((f, i) => f.gain.setTargetAtTime(eqValues[i], t, 0.015));
+    liveNodes.comp.threshold.setTargetAtTime(+$('thresh').value, t, 0.015);
+    liveNodes.comp.ratio.setTargetAtTime(+$('ratio').value, t, 0.015);
+    liveNodes.gain.gain.setTargetAtTime(Math.pow(10, (+$('gain').value) / 20), t, 0.015);
+    liveNodes.limiter.threshold.setTargetAtTime(+$('limit').value, t, 0.015);
+    if (liveNodes.msGains) {
+      const g = +$('width').value / 100;
+      liveNodes.msGains.ll.gain.setTargetAtTime((1 + g) / 2, t, 0.015);
+      liveNodes.msGains.lr.gain.setTargetAtTime((1 - g) / 2, t, 0.015);
+      liveNodes.msGains.rl.gain.setTargetAtTime((1 - g) / 2, t, 0.015);
+      liveNodes.msGains.rr.gain.setTargetAtTime((1 + g) / 2, t, 0.015);
+    }
+    if (liveNodes.masterWet && liveNodes.rawDry) {
+      liveNodes.masterWet.gain.setTargetAtTime(isBypass ? 0 : 1, t, 0.015);
+      liveNodes.rawDry.gain.setTargetAtTime(isBypass ? 1 : 0, t, 0.015);
+    }
+  }
+
+  function stopPlayback(resetOffset = false) {
+    if (liveSource) {
+      try { liveSource.onended = null; liveSource.stop(); } catch (_) {}
+      liveSource.disconnect();
+      liveSource = null;
+    }
+    if (isPlaying && audioCtx && !resetOffset) {
+      playOffset = Math.min(sourceBuffer ? sourceBuffer.duration : 0, playOffset + (audioCtx.currentTime - playStartTime));
+    }
+    if (resetOffset) playOffset = 0;
+    isPlaying = false;
+    $('playBtn').textContent = 'Phát';
+    if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+    $('liveMeter').style.width = '0%';
+    $('liveDb').textContent = '-∞ dB';
+    drawWaveform();
+  }
+
+  async function togglePlay() {
+    if (!sourceBuffer) return;
+    if (isPlaying) {
+      stopPlayback(false);
+      return;
+    }
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === 'suspended') await audioCtx.resume();
+
+    const ch = Math.min(2, sourceBuffer.numberOfChannels);
+    const dsp = buildDspChain(audioCtx, ch);
+    const masterWet = audioCtx.createGain();
+    const rawDry = audioCtx.createGain();
+    const analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 1024;
+
+    masterWet.gain.value = isBypass ? 0 : 1;
+    rawDry.gain.value = isBypass ? 1 : 0;
+
+    const src = audioCtx.createBufferSource();
+    src.buffer = sourceBuffer;
+
+    // Parallel A/B routing (clean glitch-free crossfade)
+    src.connect(dsp.input);
+    dsp.output.connect(masterWet);
+    masterWet.connect(analyser);
+
+    src.connect(rawDry);
+    rawDry.connect(analyser);
+
+    analyser.connect(audioCtx.destination);
+
+    liveNodes = { ...dsp, masterWet, rawDry, analyser };
+    liveSource = src;
+    playStartTime = audioCtx.currentTime;
+    isPlaying = true;
+    $('playBtn').textContent = 'Tạm dừng';
+
+    src.onended = () => {
+      if (isPlaying) stopPlayback(true);
+    };
+    src.start(0, playOffset);
+    tickMeter();
+  }
+
+  function tickMeter() {
+    if (!isPlaying || !sourceBuffer) return;
+    const elapsed = Math.min(sourceBuffer.duration, playOffset + (audioCtx.currentTime - playStartTime));
+    $('timeReadout').textContent = `${fmtTime(elapsed)} / ${fmtTime(sourceBuffer.duration)}`;
+
+    if (liveNodes && liveNodes.analyser) {
+      const data = new Float32Array(liveNodes.analyser.fftSize);
+      liveNodes.analyser.getFloatTimeDomainData(data);
+      let peak = 0;
+      for (let i = 0; i < data.length; i++) {
+        const a = Math.abs(data[i]);
+        if (a > peak) peak = a;
+      }
+      const db = peak > 1e-6 ? 20 * Math.log10(peak) : -80;
+      const pct = Math.max(0, Math.min(100, ((db + 48) / 48) * 100));
+      $('liveMeter').style.width = pct.toFixed(1) + '%';
+      $('liveDb').textContent = db <= -79 ? '-∞ dB' : db.toFixed(1) + ' dBFS';
+    }
+    drawWaveform(elapsed / sourceBuffer.duration);
+    rafId = requestAnimationFrame(tickMeter);
+  }
+
+  function drawWaveform(progress = null) {
+    const canvas = $('waveCanvas');
+    const ctx = canvas.getContext('2d');
+    const w = canvas.width, h = canvas.height;
+    ctx.clearRect(0, 0, w, h);
+    ctx.fillStyle = '#090d18';
+    ctx.fillRect(0, 0, w, h);
+
+    if (!sourceBuffer) {
+      ctx.fillStyle = '#334060';
+      ctx.fillRect(0, h / 2 - 1, w, 2);
+      return;
+    }
+
+    const data = sourceBuffer.getChannelData(0);
+    const step = Math.max(1, Math.floor(data.length / w));
+    const mid = h / 2;
+    const progX = progress !== null ? progress * w : (playOffset / sourceBuffer.duration) * w;
+
+    for (let x = 0; x < w; x++) {
+      let min = 1, max = -1;
+      const start = x * step;
+      for (let j = 0; j < step; j += Math.max(1, Math.floor(step / 12))) {
+        const v = data[start + j] || 0;
+        if (v < min) min = v;
+        if (v > max) max = v;
+      }
+      const y1 = mid + min * mid * 0.9;
+      const y2 = mid + max * mid * 0.9;
+      ctx.fillStyle = x <= progX ? '#43d9e6' : '#4a5580';
+      ctx.fillRect(x, y1, 1, Math.max(1, y2 - y1));
+    }
+
+    // Playhead
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(Math.min(w - 2, Math.max(0, progX)), 0, 2, h);
+  }
+
+  $('waveCanvas').addEventListener('click', e => {
+    if (!sourceBuffer) return;
+    const rect = e.target.getBoundingClientRect();
+    const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    const wasPlaying = isPlaying;
+    if (wasPlaying) stopPlayback(false);
+    playOffset = ratio * sourceBuffer.duration;
+    $('timeReadout').textContent = `${fmtTime(playOffset)} / ${fmtTime(sourceBuffer.duration)}`;
+    drawWaveform(ratio);
+    if (wasPlaying) togglePlay();
+  });
+
+  $('playBtn').addEventListener('click', togglePlay);
+  $('stopBtn').addEventListener('click', () => {
+    stopPlayback(true);
+    if (sourceBuffer) $('timeReadout').textContent = `0:00 / ${fmtTime(sourceBuffer.duration)}`;
+  });
+
+  $('abBtn').addEventListener('click', () => {
+    isBypass = !isBypass;
+    const btn = $('abBtn');
+    btn.textContent = isBypass ? 'Đang nghe: GỐC (RAW)' : 'Đang nghe: MASTER';
+    btn.className = 'btn ab ' + (isBypass ? 'active-raw' : 'active-master');
+    applyLiveParams();
+  });
+
+  function analyzeBuffer(buf) {
+    let peak = 0;
+    let sumSq = 0;
+    let count = 0;
+    let clips = 0;
+    const ch = buf.numberOfChannels;
+    for (let c = 0; c < ch; c++) {
+      const data = buf.getChannelData(c);
+      for (let i = 0; i < data.length; i++) {
+        const s = data[i];
+        const a = Math.abs(s);
+        if (a > peak) peak = a;
+        if (a >= 0.999) clips++;
+        sumSq += s * s;
+        count++;
+      }
+    }
+    const rms = Math.sqrt(sumSq / Math.max(1, count));
+    const peakDb = peak > 1e-6 ? 20 * Math.log10(peak) : -96;
+    const rmsDb = rms > 1e-6 ? 20 * Math.log10(rms) : -96;
+    // Approximate LUFS (RMS-based estimate for stereo music)
+    const approxLufs = rmsDb - 0.7;
+    return { peakDb, rmsDb, approxLufs, clips };
+  }
+
+  function updateKpis(stats) {
+    $('kpiPeak').textContent = stats.peakDb.toFixed(1) + ' dBFS';
+    $('kpiRms').textContent = stats.rmsDb.toFixed(1) + ' dBFS';
+    $('kpiLufs').textContent = stats.approxLufs.toFixed(1) + ' LUFS';
+    $('kpiClip').textContent = stats.clips > 0 ? `${stats.clips} mẫu` : 'An toàn';
+    $('kpiClip').style.color = stats.clips > 0 ? 'var(--bad)' : 'var(--good)';
+  }
+
+  async function loadFile(file) {
+    if (!file) return;
+    const ext = file.name.toLowerCase().split('.').pop();
+    if (!['mp3', 'wav'].includes(ext)) {
+      setStatus('exportstatus', 'Chỉ hỗ trợ file định dạng .mp3 hoặc .wav.', 'bad');
+      return;
+    }
+    stopPlayback(true);
+    sourceFile = file;
+    sourceBuffer = null;
+    masteredBuffer = null;
+
+    $('filename').textContent = file.name;
+    $('filemeta').textContent = `${(file.size / 1048576).toFixed(2)} MB · ${file.type || 'audio'}`;
+    $('fileinfo').style.display = 'block';
+    $('playBtn').disabled = $('stopBtn').disabled = $('abBtn').disabled = true;
+    $('render').disabled = $('autoGain').disabled = true;
+    $('scan').disabled = false;
+    $('mp3').disabled = $('wav').disabled = true;
+    setStatus('exportstatus', 'Đang giải mã âm thanh…');
+
+    try {
+      const ab = await file.arrayBuffer();
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      sourceBuffer = await ctx.decodeAudioData(ab.slice(0));
+      await ctx.close();
+
+      $('filemeta').textContent = `${(file.size / 1048576).toFixed(2)} MB · ${sourceBuffer.sampleRate} Hz · ${sourceBuffer.numberOfChannels} kênh · ${fmtTime(sourceBuffer.duration)}`;
+      $('timeReadout').textContent = `0:00 / ${fmtTime(sourceBuffer.duration)}`;
+      $('playBtn').disabled = $('stopBtn').disabled = $('abBtn').disabled = false;
+      $('render').disabled = $('autoGain').disabled = false;
+
+      if (!$('title').value) $('title').value = file.name.replace(/\.[^.]+$/, '');
+      drawWaveform(0);
+      updateKpis(analyzeBuffer(sourceBuffer));
+      scanProvenance(file);
+      setStatus('exportstatus', 'File đã sẵn sàng. Hãy nhấn Phát để nghe thử & chỉnh thông số, sau đó nhấn “Render & Đo chuẩn xuất”.');
+    } catch (e) {
+      setStatus('exportstatus', 'Không giải mã được file. Hãy thử file MP3 hoặc WAV chuẩn khác.', 'bad');
+      console.error(e);
+    }
+  }
+
+  $('file').addEventListener('change', e => loadFile(e.target.files[0]));
+  $('drop').addEventListener('click', e => { if (e.target.tagName !== 'INPUT') $('file').click(); });
+  $('drop').addEventListener('dragover', e => { e.preventDefault(); $('drop').classList.add('drag'); });
+  $('drop').addEventListener('dragleave', () => $('drop').classList.remove('drag'));
+  $('drop').addEventListener('drop', e => { e.preventDefault(); $('drop').classList.remove('drag'); loadFile(e.dataTransfer.files[0]); });
+
+  $('clear').addEventListener('click', () => {
+    stopPlayback(true);
+    sourceFile = sourceBuffer = masteredBuffer = null;
+    $('file').value = '';
+    $('fileinfo').style.display = 'none';
+    $('timeReadout').textContent = '0:00 / 0:00';
+    $('playBtn').disabled = $('stopBtn').disabled = $('abBtn').disabled = true;
+    $('render').disabled = $('autoGain').disabled = $('scan').disabled = $('mp3').disabled = $('wav').disabled = true;
+    $('kpiPeak').textContent = '-- dBFS';
+    $('kpiRms').textContent = '-- dBFS';
+    $('kpiLufs').textContent = '-- LUFS';
+    $('kpiClip').textContent = 'An toàn';
+    $('kpiClip').style.color = '';
+    drawWaveform();
+    setStatus('provenance', 'Chọn file để quét dấu hiệu metadata và Content Credentials.');
+    setStatus('exportstatus', 'Chưa có bản render. Hãy nạp file, chỉnh thông số và nhấn “Render & Đo chuẩn xuất”.');
+  });
+
+  // Safe chunked ASCII + UTF-16LE/BE provenance scan
+  async function scanProvenance(file) {
+    setStatus('provenance', 'Đang quét các chuỗi metadata phổ biến…');
+    try {
+      const buf = await file.arrayBuffer();
+      const bytes = new Uint8Array(buf);
+      const decoderLatin = new TextDecoder('latin1');
+      let found = new Set();
+      const terms = ['suno', 'c2pa', 'content credentials', 'content_credentials', 'manifest', 'jumbf'];
+      const chunk = 262144; // 256 KB with overlap
+      for (let i = 0; i < bytes.length; i += (chunk - 64)) {
+        const slice = bytes.subarray(i, Math.min(i + chunk, bytes.length));
+        const text = decoderLatin.decode(slice).toLowerCase();
+        for (const t of terms) {
+          if (text.includes(t)) found.add(t);
+        }
+      }
+      const list = Array.from(found);
+      if (list.length) {
+        setStatus('provenance', `Phát hiện chuỗi có thể liên quan: ${list.join(', ')}. Đây chỉ là quét chuỗi thô, KHÔNG xác minh được tính hợp lệ của chứng thực.`, 'warn');
+      } else {
+        setStatus('provenance', 'Không tìm thấy các chuỗi dò phổ biến trong dữ liệu file. Điều này KHÔNG chứng minh file không được tạo bằng Suno hoặc không có provenance.');
+      }
+    } catch (_) {
+      setStatus('provenance', 'Không thể quét file.', 'bad');
+    }
+  }
+  $('scan').addEventListener('click', () => sourceFile && scanProvenance(sourceFile));
+
+  // Auto-Gain helper based on source peak & limiter ceiling
+  $('autoGain').addEventListener('click', () => {
+    if (!sourceBuffer) return;
+    const stats = analyzeBuffer(sourceBuffer);
+    const ceiling = +$('limit').value;
+    // Target ~2 dB into limiter for clean punch without over-squashing
+    let suggested = (ceiling - stats.peakDb) + 1.5;
+    suggested = Math.max(-6, Math.min(9, Math.round(suggested * 10) / 10));
+    $('gain').value = suggested;
+    syncLabels();
+    applyLiveParams();
+    invalidateRender();
+    clearActivePreset();
+  });
+
+  // Offline high-precision render
+  async function renderMaster() {
+    if (!sourceBuffer) return;
+    $('render').disabled = true;
+    setStatus('exportstatus', 'Đang render bằng OfflineAudioContext…');
+    try {
+      const rate = sourceBuffer.sampleRate;
+      const frames = sourceBuffer.length;
+      const ch = Math.min(2, sourceBuffer.numberOfChannels);
+      const off = new OfflineAudioContext(ch, frames, rate);
+      const src = off.createBufferSource();
+      src.buffer = sourceBuffer;
+
+      const dsp = buildDspChain(off, ch);
+      src.connect(dsp.input);
+      dsp.output.connect(off.destination);
+      src.start(0);
+
+      const rendered = await off.startRendering();
+      masteredBuffer = rendered;
+      const stats = analyzeBuffer(rendered);
+      updateKpis(stats);
+
+      $('mp3').disabled = false;
+      $('wav').disabled = false;
+      setStatus(
+        'exportstatus',
+        `Render hoàn tất · ${fmtTime(rendered.duration)} · ${rendered.sampleRate} Hz · ${rendered.numberOfChannels} kênh.\nPeak: ${stats.peakDb.toFixed(1)} dBFS | Ước lượng: ${stats.approxLufs.toFixed(1)} LUFS. Sẵn sàng xuất MP3 hoặc WAV.`,
+        'good'
+      );
+    } catch (err) {
+      setStatus('exportstatus', 'Lỗi render: ' + err.message, 'bad');
+    } finally {
+      $('render').disabled = false;
+    }
+  }
+  $('render').addEventListener('click', renderMaster);
+
+  // Encode WAV (16-bit or 24-bit) with proper RIFF LIST/INFO metadata
+  function encodeWav(buf, bits = 24) {
+    const ch = buf.numberOfChannels;
+    const sr = buf.sampleRate;
+    const frames = buf.length;
+    const bytesPerSample = bits / 8;
+    const dataSize = frames * ch * bytesPerSample;
+
+    const infoPairs = [
+      ['INAM', $('title').value.trim()],
+      ['IART', $('artist').value.trim()],
+      ['IPRD', $('album').value.trim()],
+      ['ICMT', $('comment').value.trim()]
+    ].filter(([, v]) => v.length > 0);
+
+    const enc = new TextEncoder();
+    const infoChunks = infoPairs.map(([id, val]) => {
+      const strBytes = enc.encode(val + '\0');
+      const pad = strBytes.length % 2;
+      const sub = new Uint8Array(8 + strBytes.length + pad);
+      for (let i = 0; i < 4; i++) sub[i] = id.charCodeAt(i);
+      const dv = new DataView(sub.buffer);
+      dv.setUint32(4, strBytes.length, true);
+      sub.set(strBytes, 8);
+      return sub;
+    });
+
+    let listSize = 0;
+    if (infoChunks.length) {
+      const innerLen = infoChunks.reduce((a, b) => a + b.length, 0);
+      listSize = 12 + innerLen; // 'LIST' + size(4) + 'INFO' + subchunks
+    }
+
+    const totalSize = 44 + dataSize + listSize;
+    const ab = new ArrayBuffer(totalSize);
+    const v = new DataView(ab);
+    const u8 = new Uint8Array(ab);
+    const writeStr = (o, s) => { for (let i = 0; i < s.length; i++) v.setUint8(o + i, s.charCodeAt(i)); };
+
+    writeStr(0, 'RIFF');
+    v.setUint32(4, totalSize - 8, true);
+    writeStr(8, 'WAVE');
+    writeStr(12, 'fmt ');
+    v.setUint32(16, 16, true);
+    v.setUint16(20, 1, true);
+    v.setUint16(22, ch, true);
+    v.setUint32(24, sr, true);
+    v.setUint32(28, sr * ch * bytesPerSample, true);
+    v.setUint16(32, ch * bytesPerSample, true);
+    v.setUint16(34, bits, true);
+    writeStr(36, 'data');
+    v.setUint32(40, dataSize, true);
+
+    let o = 44;
+    if (bits === 24) {
+      for (let i = 0; i < frames; i++) {
+        for (let c = 0; c < ch; c++) {
+          const s = Math.max(-1, Math.min(1, buf.getChannelData(c)[i]));
+          const x = Math.round(s * (s < 0 ? 8388608 : 8388607));
+          v.setUint8(o++, x & 255);
+          v.setUint8(o++, (x >> 8) & 255);
+          v.setUint8(o++, (x >> 16) & 255);
+        }
+      }
+    } else {
+      for (let i = 0; i < frames; i++) {
+        for (let c = 0; c < ch; c++) {
+          const s = Math.max(-1, Math.min(1, buf.getChannelData(c)[i]));
+          const x = Math.round(s * (s < 0 ? 32768 : 32767));
+          v.setInt16(o, x, true);
+          o += 2;
+        }
+      }
+    }
+
+    if (infoChunks.length) {
+      writeStr(o, 'LIST');
+      v.setUint32(o + 4, listSize - 8, true);
+      writeStr(o + 8, 'INFO');
+      let p = o + 12;
+      for (const chunk of infoChunks) {
+        u8.set(chunk, p);
+        p += chunk.length;
+      }
+    }
+
+    return new Blob([ab], { type: 'audio/wav' });
+  }
+
+  // Proper ID3v2.3 tagger (handles COMM frame properly)
+  function concatU8(arr) {
+    const total = arr.reduce((a, b) => a + b.length, 0);
+    const out = new Uint8Array(total);
+    let p = 0;
+    arr.forEach(a => { out.set(a, p); p += a.length; });
+    return out;
+  }
+
+  function id3TextFrame(id, text) {
+    const enc = new TextEncoder().encode(text);
+    const data = concatU8([new Uint8Array([3]), enc]); // UTF-8
+    const head = new Uint8Array(10);
+    for (let i = 0; i < 4; i++) head[i] = id.charCodeAt(i);
+    const len = data.length;
+    head.set([(len >>> 24) & 255, (len >>> 16) & 255, (len >>> 8) & 255, len & 255], 4);
+    return concatU8([head, data]);
+  }
+
+  function id3CommentFrame(text) {
+    const enc = new TextEncoder().encode(text);
+    // Encoding(3=UTF8), Lang('vie'), ShortDesc(0x00), Text
+    const data = concatU8([new Uint8Array([3, 118, 105, 101, 0]), enc]);
+    const head = new Uint8Array(10);
+    'COMM'.split('').forEach((c, i) => head[i] = c.charCodeAt(0));
+    const len = data.length;
+    head.set([(len >>> 24) & 255, (len >>> 16) & 255, (len >>> 8) & 255, len & 255], 4);
+    return concatU8([head, data]);
+  }
+
+  function syncsafe(n) {
+    return [(n >> 21) & 127, (n >> 14) & 127, (n >> 7) & 127, n & 127];
+  }
+
+  function addID3(mp3Blob) {
+    const frames = [];
+    if ($('title').value.trim()) frames.push(id3TextFrame('TIT2', $('title').value.trim()));
+    if ($('artist').value.trim()) frames.push(id3TextFrame('TPE1', $('artist').value.trim()));
+    if ($('album').value.trim()) frames.push(id3TextFrame('TALB', $('album').value.trim()));
+    if ($('comment').value.trim()) frames.push(id3CommentFrame($('comment').value.trim()));
+    if (!frames.length) return mp3Blob;
+    const body = concatU8(frames);
+    const head = new Uint8Array([73, 68, 51, 3, 0, 0, ...syncsafe(body.length)]);
+    return new Blob([head, body, mp3Blob], { type: 'audio/mpeg' });
+  }
+
+  function safeName() {
+    return ($('title').value || 'mastered-audio').replace(/[\\/:*?"<>|]/g, '_').trim() || 'mastered-audio';
+  }
+
+  function download(blob, name) {
+    const u = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = u;
+    a.download = name;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(u), 3000);
+  }
+
+  function to16(f) {
+    const out = new Int16Array(f.length);
+    for (let i = 0; i < f.length; i++) {
+      const s = Math.max(-1, Math.min(1, f[i]));
+      out[i] = s < 0 ? s * 32768 : s * 32767;
+    }
+    return out;
+  }
+
+  $('wav').addEventListener('click', () => {
+    if (!masteredBuffer) return;
+    const blob = encodeWav(masteredBuffer, 24);
+    download(blob, safeName() + '_24bit.wav');
+    setStatus('exportstatus', 'Đã xuất WAV PCM 24-bit kèm RIFF INFO metadata.', 'good');
+  });
+
+  $('mp3').addEventListener('click', () => {
+    if (!masteredBuffer) return;
+    if (!window.lamejs) {
+      setStatus('exportstatus', 'Không tải được thư viện mã hóa MP3 (lamejs). Hãy kiểm tra kết nối Internet và tải lại trang.', 'bad');
+      return;
+    }
+    $('mp3').disabled = true;
+    $('wav').disabled = true;
+    setStatus('exportstatus', 'Đang mã hóa MP3 320 kbps… 0%');
+
+    const channels = Math.min(2, masteredBuffer.numberOfChannels);
+    const rate = masteredBuffer.sampleRate;
+    const encoder = new lamejs.Mp3Encoder(channels, rate, 320);
+    const left = to16(masteredBuffer.getChannelData(0));
+    const right = channels > 1 ? to16(masteredBuffer.getChannelData(1)) : null;
+    const parts = [];
+    const block = 1152;
+    const chunkBlocks = 150; // yield to UI every ~150 blocks
+    let idx = 0;
+
+    function step() {
+      try {
+        let count = 0;
+        while (idx < left.length && count < chunkBlocks) {
+          const l = left.subarray(idx, idx + block);
+          const r = right ? right.subarray(idx, idx + block) : null;
+          const out = right ? encoder.encodeBuffer(l, r) : encoder.encodeBuffer(l);
+          if (out.length) parts.push(new Uint8Array(out));
+          idx += block;
+          count++;
+        }
+        const pct = Math.min(100, Math.round((idx / left.length) * 100));
+        setStatus('exportstatus', `Đang mã hóa MP3 320 kbps… ${pct}%`);
+        if (idx < left.length) {
+          setTimeout(step, 0);
+        } else {
+          const end = encoder.flush();
+          if (end.length) parts.push(new Uint8Array(end));
+          const raw = new Blob(parts, { type: 'audio/mpeg' });
+          const tagged = addID3(raw);
+          download(tagged, safeName() + '_320kbps.mp3');
+          setStatus('exportstatus', 'Đã xuất MP3 320 kbps kèm thẻ ID3v2.3 hoàn chỉnh.', 'good');
+          $('mp3').disabled = false;
+          $('wav').disabled = false;
+        }
+      } catch (e) {
+        setStatus('exportstatus', 'Lỗi mã hóa MP3: ' + e.message, 'bad');
+        $('mp3').disabled = false;
+        $('wav').disabled = false;
+      }
+    }
+    setTimeout(step, 10);
+  });
+
+  drawWaveform();
+})();
+</script>
+</body>
+</html>
