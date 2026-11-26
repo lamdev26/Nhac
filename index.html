@@ -331,7 +331,7 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:6px 0 0}
       </div>
       <div class="control">
         <div class="controltop"><label>Output gain</label><span class="value" id="gainv">0 dB</span></div>
-        <input id="gain" type="range" min="-6" max="9" value="0" step="0.1">
+        <input id="gain" type="range" min="-6" max="15" value="0" step="0.1">
       </div>
       <div class="control">
         <div class="controltop"><label>Bass boost (120 Hz)</label><span class="value" id="bassv">0 dB</span></div>
@@ -361,7 +361,22 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:6px 0 0}
       <h3 style="margin-top:12px">EQ 5 dải</h3>
       <div class="eqgrid" id="eqgrid"></div>
 
-      <div class="actions" style="margin-top:14px">
+      <div class="switch-row" style="margin-top:12px;gap:10px;flex-wrap:wrap">
+        <div>
+          <span>Tự đẩy âm lượng cho file nhỏ (Suno)</span>
+          <small>Tự đo K-Weighted LUFS và căn chỉnh Gain + Soft Clip đạt đúng mục tiêu</small>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <select id="targetLufs" aria-label="Mục tiêu LUFS" style="background:#0c1220;color:var(--txt);border:1px solid #323e5c;border-radius:9px;padding:7px 10px;font-size:12.5px">
+            <option value="-9">-9 LUFS (Suno To / Club)</option>
+            <option value="-11">-11 LUFS (TikTok / Nổi bật)</option>
+            <option value="-14">-14 LUFS (Spotify / YouTube)</option>
+          </select>
+          <button class="btn" id="autoLufs" disabled>Auto-Master LUFS</button>
+        </div>
+      </div>
+
+      <div class="actions" style="margin-top:12px">
         <button class="btn" id="render" disabled>Render &amp; Đo chuẩn xuất</button>
         <button class="btn secondary" id="autoGain" disabled>Auto-Gain tối ưu</button>
         <button class="btn secondary" id="reset">Về mặc định gốc</button>
@@ -963,7 +978,7 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:6px 0 0}
     $('filemeta').textContent = `${(file.size / 1048576).toFixed(2)} MB · ${file.type || 'audio'}`;
     $('fileinfo').style.display = 'block';
     $('playBtn').disabled = $('stopBtn').disabled = $('abBtn').disabled = true;
-    $('render').disabled = $('autoGain').disabled = true;
+    $('render').disabled = $('autoGain').disabled = $('autoLufs').disabled = true;
     $('scan').disabled = false;
     $('mp3').disabled = $('wav').disabled = true;
     showLoadStatus('Đang đọc và giải mã âm thanh…');
@@ -979,7 +994,7 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:6px 0 0}
       $('filemeta').textContent = `${(file.size / 1048576).toFixed(2)} MB · ${sourceBuffer.sampleRate} Hz · ${sourceBuffer.numberOfChannels} kênh · ${fmtTime(sourceBuffer.duration)}`;
       $('timeReadout').textContent = `0:00 / ${fmtTime(sourceBuffer.duration)}`;
       $('playBtn').disabled = $('stopBtn').disabled = $('abBtn').disabled = false;
-      $('render').disabled = $('autoGain').disabled = false;
+      $('render').disabled = $('autoGain').disabled = $('autoLufs').disabled = false;
 
       $('title').value = file.name.replace(/\.[^.]+$/, '');
       drawCanvas(0);
@@ -1018,7 +1033,7 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:6px 0 0}
     $('loadStatus').style.display = 'none';
     $('timeReadout').textContent = '0:00 / 0:00';
     $('playBtn').disabled = $('stopBtn').disabled = $('abBtn').disabled = true;
-    $('render').disabled = $('autoGain').disabled = $('scan').disabled = $('mp3').disabled = $('wav').disabled = true;
+    $('render').disabled = $('autoGain').disabled = $('autoLufs').disabled = $('scan').disabled = $('mp3').disabled = $('wav').disabled = true;
     $('kpiPeak').textContent = '-- dBFS';
     $('kpiRms').textContent = '-- dBFS';
     $('kpiLufs').textContent = '-- LUFS';
@@ -1060,7 +1075,7 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:6px 0 0}
     const stats = await analyzeBufferPro(sourceBuffer);
     const ceiling = +$('limit').value;
     let suggested = (ceiling - stats.peakDb) + 1.5;
-    suggested = Math.max(-6, Math.min(9, Math.round(suggested * 10) / 10));
+    suggested = Math.max(-6, Math.min(15, Math.round(suggested * 10) / 10));
     $('gain').value = suggested;
     syncLabels();
     applyLiveParams();
@@ -1104,6 +1119,68 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:6px 0 0}
     }
   }
   $('render').addEventListener('click', renderMaster);
+
+  async function measureSnippetLufs(buf) {
+    const sr = buf.sampleRate;
+    const ch = Math.min(2, buf.numberOfChannels);
+    const maxFrames = Math.min(buf.length, sr * 18);
+    const startFrame = buf.length > maxFrames ? Math.floor(buf.length * 0.25) : 0;
+    const snippet = new AudioBuffer({ length: maxFrames, numberOfChannels: ch, sampleRate: sr });
+    for (let c = 0; c < ch; c++) {
+      snippet.copyToChannel(buf.getChannelData(c).subarray(startFrame, startFrame + maxFrames), c);
+    }
+    const off = new OfflineAudioContext(ch, maxFrames, sr);
+    const src = off.createBufferSource();
+    src.buffer = snippet;
+    const dsp = buildDspChain(off, ch);
+    src.connect(dsp.input);
+    dsp.output.connect(off.destination);
+    src.start(0);
+    const rendered = await off.startRendering();
+    const stats = await analyzeBufferPro(rendered);
+    return stats.kLufs;
+  }
+
+  $('autoLufs').addEventListener('click', async () => {
+    if (!sourceBuffer) return;
+    const target = +$('targetLufs').value;
+    $('autoLufs').disabled = true;
+    $('render').disabled = true;
+    setStatus('exportstatus', `Đang đo và tối ưu âm lượng về mục tiêu ${target} LUFS…`);
+
+    try {
+      if (+$('ratio').value <= 1.1 && +$('clip').value === 0) {
+        $('hpf').value = 30;
+        $('thresh').value = target >= -11 ? -16 : -18;
+        $('ratio').value = target >= -11 ? 3.5 : 2.5;
+        $('clip').value = target >= -11 ? 35 : 15;
+        $('limit').value = target >= -11 ? -0.6 : -1.0;
+        if (target >= -11) $('monoBass').checked = true;
+      } else if (target >= -11 && +$('limit').value > -0.6) {
+        $('limit').value = -0.6;
+      }
+
+      syncLabels();
+      clearActivePreset();
+
+      for (let pass = 0; pass < 2; pass++) {
+        const currentLufs = await measureSnippetLufs(sourceBuffer);
+        const delta = target - currentLufs;
+        let nextGain = +$('gain').value + delta * 0.92;
+        nextGain = Math.max(-6, Math.min(15, Math.round(nextGain * 10) / 10));
+        $('gain').value = nextGain;
+        syncLabels();
+      }
+
+      applyLiveParams();
+      await renderMaster();
+    } catch (err) {
+      setStatus('exportstatus', 'Lỗi khi tự động cân LUFS: ' + err.message, 'bad');
+    } finally {
+      $('autoLufs').disabled = false;
+      $('render').disabled = false;
+    }
+  });
 
   // Encode WAV 24-bit with RIFF LIST/INFO + TPDF dithering for clean quantization
   function encodeWav(buf, bits = 24) {
