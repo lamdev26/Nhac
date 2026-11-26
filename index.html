@@ -297,7 +297,7 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:6px 0 0}
         </button>
         <button class="preset-btn" data-preset="edm">
           <b>1. EDM / Vinahouse Club</b>
-          <small>Kick/Sub chắc · sáng · Soft Clip 35%</small>
+          <small>Kick/Sub chắc · sáng · giữ sạch vocal</small>
         </button>
         <button class="preset-btn" data-preset="vocal">
           <b>2. Vocal / Ballad Ấm</b>
@@ -436,11 +436,11 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:6px 0 0}
   // Mặc định theo file gốc + 5 kiểu đề xuất
   const PRESETS = {
     original:  { monoBass: false, hpf: 20, gain: 0,   bass: 0,   thresh: 0,   ratio: 1,   clip: 0,  limit: -0.3, width: 100, eq: [0, 0, 0, 0, 0] },
-    edm:       { monoBass: true,  hpf: 30, gain: 2.5, bass: 2.5, thresh: -14, ratio: 4.0, clip: 35, limit: -0.6, width: 112, eq: [1.5, -1.5, 0.5, 2.0, 2.5] },
-    vocal:     { monoBass: true,  hpf: 40, gain: 1.5, bass: 1.0, thresh: -20, ratio: 2.5, clip: 15, limit: -1.0, width: 104, eq: [-1.0, 0.5, 2.0, 1.5, 1.0] },
-    streaming: { monoBass: true,  hpf: 28, gain: 1.0, bass: 0.5, thresh: -18, ratio: 2.5, clip: 15, limit: -1.0, width: 105, eq: [0.5, -0.5, 0.5, 1.0, 1.0] },
-    tiktok:    { monoBass: true,  hpf: 46, gain: 2.8, bass: 1.5, thresh: -15, ratio: 4.0, clip: 40, limit: -0.8, width: 100, eq: [-0.5, 1.0, 2.5, 2.0, 1.5] },
-    lofi:      { monoBass: false, hpf: 32, gain: 0.5, bass: 2.0, thresh: -22, ratio: 2.5, clip: 25, limit: -1.2, width: 92,  eq: [2.0, 1.0, -0.5, -2.0, -4.0] }
+    edm:       { monoBass: true,  hpf: 30, gain: 1.2, bass: 1.5, thresh: -14, ratio: 3.0, clip: 15, limit: -0.8, width: 108, eq: [1.0, -1.0, 0.5, 1.5, 1.5] },
+    vocal:     { monoBass: true,  hpf: 36, gain: 0.8, bass: 0.5, thresh: -18, ratio: 2.2, clip: 8,  limit: -1.0, width: 103, eq: [-0.5, 0.5, 1.5, 1.0, 0.8] },
+    streaming: { monoBass: true,  hpf: 28, gain: 0.5, bass: 0.5, thresh: -16, ratio: 2.5, clip: 10, limit: -1.0, width: 104, eq: [0.5, -0.5, 0.5, 0.8, 0.8] },
+    tiktok:    { monoBass: true,  hpf: 42, gain: 1.5, bass: 1.0, thresh: -15, ratio: 3.0, clip: 18, limit: -0.8, width: 100, eq: [-0.5, 0.8, 1.8, 1.5, 1.0] },
+    lofi:      { monoBass: false, hpf: 30, gain: 0.3, bass: 1.5, thresh: -20, ratio: 2.2, clip: 12, limit: -1.2, width: 92,  eq: [1.5, 0.8, -0.5, -1.5, -3.0] }
   };
 
   $('eqgrid').innerHTML = eqDefs.map((e, i) =>
@@ -538,19 +538,31 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:6px 0 0}
 
   $('reset').addEventListener('click', () => applyPreset('original'));
 
-  // Soft Clipper curve (tanh)
+  // Soft Clipper curve with +6dB internal headroom (pre-gain 0.5 -> curve -> post-gain 2.0)
+  // Linear below threshold so vocals stay crystal clear; only hot peaks saturate smoothly
   function makeClipCurve(drivePct) {
-    const samples = 2048;
+    const samples = 4096;
     const curve = new Float32Array(samples);
-    if (drivePct <= 0) {
-      for (let i = 0; i < samples; i++) curve[i] = (i * 2) / (samples - 1) - 1;
-      return curve;
-    }
-    const k = 1 + (drivePct / 100) * 4.5;
-    const norm = Math.tanh(k);
+    const knee = Math.max(0.18, 0.48 - (drivePct / 100) * 0.25); // in scaled [-1,1] where 0.5 = 0dBFS
+    const ceil = 0.49; // corresponds to ~ -0.17 dBFS after 2x post-gain
     for (let i = 0; i < samples; i++) {
       const x = (i * 2) / (samples - 1) - 1;
-      curve[i] = Math.tanh(k * x) / norm;
+      const ax = Math.abs(x);
+      if (drivePct <= 0) {
+        // Safety soft-limit only above 0dBFS (|x| > 0.49)
+        if (ax <= ceil) {
+          curve[i] = x;
+        } else {
+          const over = ax - ceil;
+          curve[i] = Math.sign(x) * (ceil + 0.01 * Math.tanh(over * 20));
+        }
+      } else if (ax <= knee) {
+        curve[i] = x;
+      } else {
+        const range = Math.max(0.05, ceil - knee);
+        const over = (ax - knee) / range;
+        curve[i] = Math.sign(x) * (knee + range * Math.tanh(over));
+      }
     }
     return curve;
   }
@@ -595,24 +607,11 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:6px 0 0}
     gain.gain.value = Math.pow(10, (+$('gain').value) / 20);
     node.connect(gain); node = gain;
 
-    const clipper = ctx.createWaveShaper();
-    clipper.curve = makeClipCurve(+$('clip').value);
-    clipper.oversample = '4x';
-    node.connect(clipper); node = clipper;
-
-    const limiter = ctx.createDynamicsCompressor();
-    limiter.threshold.value = +$('limit').value;
-    limiter.knee.value = 0;
-    limiter.ratio.value = 20;
-    limiter.attack.value = 0.0015;
-    limiter.release.value = 0.06;
-    node.connect(limiter); node = limiter;
-
-    const out = ctx.createGain();
+    // Stereo Width & Mono Bass BEFORE Clipper/Limiter so widening never clips output
+    const stereoBus = ctx.createGain();
     let stereoCtrl = null;
 
     if (channels === 2) {
-      // Split into Low (<120Hz) & High (>120Hz) so Mono Bass only sums sub-bass
       const lowFilter = ctx.createBiquadFilter();
       lowFilter.type = 'lowpass';
       lowFilter.frequency.value = 120;
@@ -626,7 +625,6 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:6px 0 0}
       node.connect(lowFilter);
       node.connect(highFilter);
 
-      // Low band M/S matrix (Mono when monoBass checked, else follows width)
       const lowSplit = ctx.createChannelSplitter(2);
       const lowMerge = ctx.createChannelMerger(2);
       const lll = ctx.createGain(), llr = ctx.createGain(), lrl = ctx.createGain(), lrr = ctx.createGain();
@@ -635,9 +633,8 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:6px 0 0}
       lowSplit.connect(lrl, 0); lowSplit.connect(lrr, 1);
       lll.connect(lowMerge, 0, 0); llr.connect(lowMerge, 0, 0);
       lrl.connect(lowMerge, 0, 1); lrr.connect(lowMerge, 0, 1);
-      lowMerge.connect(out);
+      lowMerge.connect(stereoBus);
 
-      // High band M/S matrix (follows Stereo Width)
       const hiSplit = ctx.createChannelSplitter(2);
       const hiMerge = ctx.createChannelMerger(2);
       const hll = ctx.createGain(), hlr = ctx.createGain(), hrl = ctx.createGain(), hrr = ctx.createGain();
@@ -646,13 +643,36 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:6px 0 0}
       hiSplit.connect(hrl, 0); hiSplit.connect(hrr, 1);
       hll.connect(hiMerge, 0, 0); hlr.connect(hiMerge, 0, 0);
       hrl.connect(hiMerge, 0, 1); hrr.connect(hiMerge, 0, 1);
-      hiMerge.connect(out);
+      hiMerge.connect(stereoBus);
 
       stereoCtrl = { lll, llr, lrl, lrr, hll, hlr, hrl, hrr };
       applyStereoGains(stereoCtrl, ctx.currentTime);
     } else {
-      node.connect(out);
+      node.connect(stereoBus);
     }
+
+    // Limiter first to control dynamics, then headroom-scaled Soft Clipper as final ceiling guard
+    const limiter = ctx.createDynamicsCompressor();
+    limiter.threshold.value = +$('limit').value;
+    limiter.knee.value = 2;
+    limiter.ratio.value = 20;
+    limiter.attack.value = 0.001;
+    limiter.release.value = 0.08;
+    stereoBus.connect(limiter);
+
+    const preClip = ctx.createGain();
+    preClip.gain.value = 0.5;
+    const clipper = ctx.createWaveShaper();
+    clipper.curve = makeClipCurve(+$('clip').value);
+    clipper.oversample = '4x';
+    const postClip = ctx.createGain();
+    postClip.gain.value = 2.0;
+
+    const out = ctx.createGain();
+    limiter.connect(preClip);
+    preClip.connect(clipper);
+    clipper.connect(postClip);
+    postClip.connect(out);
 
     return { input, output: out, hpf, bass, eqNodes, comp, gain, clipper, limiter, stereoCtrl };
   }
@@ -1153,8 +1173,8 @@ input[type=range]{width:100%;accent-color:var(--accent);margin:6px 0 0}
         $('hpf').value = 30;
         $('thresh').value = target >= -11 ? -16 : -18;
         $('ratio').value = target >= -11 ? 3.5 : 2.5;
-        $('clip').value = target >= -11 ? 35 : 15;
-        $('limit').value = target >= -11 ? -0.6 : -1.0;
+        $('clip').value = target >= -11 ? 20 : 10;
+        $('limit').value = target >= -11 ? -0.8 : -1.0;
         if (target >= -11) $('monoBass').checked = true;
       } else if (target >= -11 && +$('limit').value > -0.6) {
         $('limit').value = -0.6;
